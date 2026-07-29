@@ -1,0 +1,32 @@
+/* Trimmed NSM fonts: only the self-hosted faces that exist (avoids bundler fetch errors for un-uploaded cuts). */
+@import url('https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700&display=swap');
+
+@font-face {
+  font-family: 'Burford';
+  src: url('_ds/overbuilt-design-system-3b590326-9189-43e6-8372-d3f6399c38de/fonts/Burford_Base.otf') format('opentype');
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Burford Outline';
+  src: url('_ds/overbuilt-design-system-3b590326-9189-43e6-8372-d3f6399c38de/fonts/Burford_Outline.otf') format('opentype');
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Caligor Sans Clean';
+  src: url('_ds/overbuilt-design-system-3b590326-9189-43e6-8372-d3f6399c38de/fonts/Caligor_Sans_Clean.otf') format('opentype');
+  font-weight: 400 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Esther';
+  src: url('_ds/overbuilt-design-system-3b590326-9189-43e6-8372-d3f6399c38de/fonts/Esther-Regular.otf') format('opentype');
+  font-weight: 400 500;
+  font-style: normal;
+  font-display: swap;
+}
