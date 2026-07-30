@@ -46,3 +46,5 @@ right strain in whichever version the visitor gets.
 Copy and data changes live in `guide-data.js` and the two HTML files. Because
 these are small text files, future commits are a few KB rather than the ~29MB
 that the single inlined file cost every time.
+
+For Questions, Call Dedman. 

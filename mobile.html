@@ -9,6 +9,8 @@
 <x-dc>
 <helmet>
 <meta name="color-scheme" content="light only">
+<meta name="supported-color-schemes" content="light">
+<meta name="theme-color" content="#20253A">
 <link rel="stylesheet" href="fonts-local.css">
 <link rel="stylesheet" href="_ds/overbuilt-design-system-3b590326-9189-43e6-8372-d3f6399c38de/tokens/colors.css">
 <link rel="stylesheet" href="_ds/overbuilt-design-system-3b590326-9189-43e6-8372-d3f6399c38de/tokens/typography.css">
@@ -18,6 +20,21 @@
 <style>
   html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
   :root { color-scheme: light only; --text-scale: 1; }
+  html { forced-color-adjust: none; -webkit-forced-color-adjust: none; }
+  /* Stop Android Chrome auto-dark from re-tinting the palette */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      color-scheme: light only;
+      --ns-arctic:#F5F4E1 !important; --ns-midnight:#20253A !important; --ns-bronze:#B79550 !important;
+      --ns-cream:#F6E7D7 !important; --ns-haze:#EFD7C5 !important;
+      --ns-bronze-dark:#97793c !important; --ns-bronze-light:#cdb074 !important;
+      --text-strong:#20253A !important; --text-body:rgba(32,37,58,0.88) !important;
+      --text-muted:rgba(32,37,58,0.60) !important; --text-faint:rgba(32,37,58,0.42) !important;
+      --text-on-dark:#F5F4E1 !important; --text-on-dark-mut:rgba(245,244,225,0.66) !important;
+      --surface-raised:#ffffff !important;
+    }
+    html, body { background:#F5F4E1 !important; color:#20253A !important; }
+  }
   :root {
     --ns-arctic:#F5F4E1; --ns-midnight:#20253A; --ns-bronze:#B79550; --ns-cream:#F6E7D7; --ns-haze:#EFD7C5;
     --ns-bronze-dark:#97793c; --ns-bronze-light:#cdb074;
@@ -53,6 +70,9 @@
   html.nsm-hero-go .nsm-hero-branch-l { animation:nsmHeroDriftL 1.6s cubic-bezier(0.2,0.7,0.25,1) .1s both; }
   @media (prefers-reduced-motion: reduce){ .nsm-hero-bloom { animation:none !important; } html.nsm-hero-go .nsm-hero-logo, html.nsm-hero-go .nsm-hero-sub, html.nsm-hero-go .nsm-hero-cta, html.nsm-hero-go .nsm-hero-branch-r, html.nsm-hero-go .nsm-hero-branch-l { animation:none !important; } }
   @media (max-height: 700px){ .nsm-hero-scroll { display:none !important; } }
+  @keyframes nsmDotPulse { 0%,100% { transform:scale(1); opacity:0.85; } 50% { transform:scale(1.28); opacity:1; } }
+  .nsm-type-dot { animation: nsmDotPulse 3.6s ease-in-out infinite; }
+  @media (prefers-reduced-motion: reduce){ .nsm-type-dot { animation:none !important; } }
   @keyframes nsmExpand { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:none; } }
   .nsm-exp { animation: nsmExpand .28s cubic-bezier(.2,.7,.25,1) both; }
   /* tactile press */
@@ -81,7 +101,7 @@
   <div id="nsm-mbar" style="position:fixed;top:0;left:0;right:0;z-index:80;min-height:46px;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:4px 16px;border-bottom:1px solid transparent;transition:background .35s ease,border-color .35s ease;">
     <div id="nsm-mprog" style="position:absolute;top:0;left:0;height:2px;width:0;background:var(--ns-bronze);"></div>
     <button onClick="{{ goHome }}" style="display:flex;align-items:center;gap:9px;background:none;border:none;cursor:pointer;padding:6px 2px;">
-      <img src="assets/brand/leaf-glyph-bronze.png" alt="" style="width:22px;height:22px;object-fit:contain;">
+      <img src="assets/brand/nav-mark-fanleaf.png" alt="" style="width:24px;height:22px;object-fit:contain;">
       <span style="font-family:var(--font-sans);font-size:calc(11px * var(--text-scale));font-weight:600;letter-spacing:0.16em;color:var(--ns-arctic);text-transform:uppercase;">Natural State</span>
     </button>
     <div style="display:flex;align-items:center;gap:12px;">
@@ -110,7 +130,7 @@
   <div style="position:fixed;right:9px;top:50%;transform:translateY(-50%);z-index:70;display:flex;flex-direction:column;align-items:flex-end;gap:11px;">
     <sc-for list="{{ wayfinder }}" as="w" hint-placeholder-count="11">
       <button onClick="{{ w.onClick }}" aria-label="{{ w.label }}" style="position:relative;display:flex;align-items:center;justify-content:flex-end;width:22px;height:8px;background:none;border:none;padding:0;cursor:pointer;">
-        <span style="position:absolute;right:26px;top:50%;transform:translateY(-50%);font-family:var(--font-sans);font-size:calc(9px * var(--text-scale));font-weight:600;letter-spacing:0.02em;color:var(--ns-bronze);opacity:{{ w.labelOp }};transition:opacity .25s ease;white-space:nowrap;pointer-events:none;">{{ w.label }}</span>
+        <span style="position:absolute;right:26px;top:50%;transform:translateY(-50%);display:none;">{{ w.label }}</span>
         <span style="width:{{ w.dotW }};height:7px;border-radius:999px;background:{{ w.dotBg }};transition:width .3s cubic-bezier(.2,.7,.25,1),background .3s ease;"></span>
       </button>
     </sc-for>
@@ -146,8 +166,7 @@
         <button onClick="{{ closeNav }}" aria-label="Close" style="display:flex;align-items:center;justify-content:center;width:44px;height:44px;background:none;border:1px solid var(--border-on-dark);border-radius:999px;cursor:pointer;color:var(--ns-arctic);font-size:calc(18px * var(--text-scale));">✕</button>
       </div>
       <div style="text-align:center;margin-bottom:30px;">
-        <img src="assets/brand/leaf-glyph-bronze.png" alt="" style="width:44px;height:44px;object-fit:contain;opacity:0.9;">
-        <p style="margin:12px 0 0;font-family:var(--font-display);font-size:calc(24px * var(--text-scale));line-height:1.1;color:var(--ns-arctic);">Find your natural state.</p>
+        <img src="assets/brand/contents-lockup.png" alt="Natural State Medicinals" style="width:min(58vw,190px);height:auto;object-fit:contain;display:block;margin:0 auto;">
       </div>
       <div style="display:flex;flex-direction:column;">
         <sc-for list="{{ chapters }}" as="c" hint-placeholder-count="12">
@@ -242,7 +261,7 @@
       <img class="nsm-hero-logo" src="assets/brand/primary-logo-light.png" alt="Natural State Medicinals" style="width:min(74vw,250px);height:auto;filter:drop-shadow(0 16px 40px rgba(0,0,0,0.5));">
       <p class="nsm-hero-sub" style="margin:0;font-family:var(--font-sans);font-size:calc(15px * var(--text-scale));line-height:1.6;color:rgba(245,244,225,0.82);max-width:34ch;">A patient's guide to the plant, our flower, and how to use it well. Grown in Arkansas, for Arkansas.</p>
       <div class="nsm-hero-cta" style="display:flex;flex-direction:column;gap:12px;width:100%;max-width:340px;margin-top:4px;">
-        <button onClick="{{ goFlower }}" style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:56px;background:var(--ns-bronze);color:var(--ns-midnight);border:none;border-radius:6px;cursor:pointer;font-family:var(--font-sans);font-size:calc(15px * var(--text-scale));font-weight:600;letter-spacing:0.04em;box-shadow:var(--shadow-bronze);">Explore the flower <span style="font-size:calc(17px * var(--text-scale));">→</span></button>
+        <button onClick="{{ goFlower }}" style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:56px;background:var(--ns-bronze);color:var(--ns-midnight);border:none;border-radius:6px;cursor:pointer;font-family:var(--font-sans);font-size:calc(15px * var(--text-scale));font-weight:600;letter-spacing:0.04em;box-shadow:var(--shadow-bronze);">Skip the theory, meet the flower <span style="font-size:calc(17px * var(--text-scale));">→</span></button>
         <button onClick="{{ openQuiz }}" style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:52px;background:transparent;color:var(--ns-arctic);border:1px solid rgba(183,149,80,0.55);border-radius:6px;cursor:pointer;font-family:var(--font-sans);font-size:calc(14px * var(--text-scale));font-weight:600;letter-spacing:0.04em;"><span style="display:grid;place-items:center;width:19px;height:19px;border:1px solid var(--ns-bronze);border-radius:50%;color:var(--ns-bronze);font-size:calc(12px * var(--text-scale));">?</span> Take the quiz, find your strain</button>
       </div>
     </div>
@@ -473,9 +492,9 @@
         <span style="font-family:var(--font-sans);font-size:calc(11px * var(--text-scale));font-weight:600;letter-spacing:0.24em;text-transform:uppercase;color:var(--ns-bronze);">The point of all this</span>
         <div aria-hidden="true" style="display:flex;justify-content:center;margin:20px 0 22px;"><span style="width:110px;height:1px;background:linear-gradient(90deg,transparent,var(--ns-bronze),transparent);"></span></div>
         <div style="display:inline-flex;align-items:center;gap:16px;margin-bottom:20px;">
-          <span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:12px;border-radius:50%;background:var(--ns-bronze);"></span><span style="font-family:var(--font-sans);font-size:calc(11px * var(--text-scale));font-weight:600;letter-spacing:0.1em;color:var(--text-strong);">Sativa</span></span>
-          <span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:12px;border-radius:50%;background:#1faa6b;"></span><span style="font-family:var(--font-sans);font-size:calc(11px * var(--text-scale));font-weight:600;letter-spacing:0.1em;color:var(--text-strong);">Hybrid</span></span>
-          <span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:12px;border-radius:50%;background:var(--ns-midnight);"></span><span style="font-family:var(--font-sans);font-size:calc(11px * var(--text-scale));font-weight:600;letter-spacing:0.1em;color:var(--text-strong);">Indica</span></span>
+          <span style="display:flex;align-items:center;gap:6px;"><span class="nsm-type-dot" style="width:12px;height:12px;border-radius:50%;background:var(--ns-bronze);animation-delay:0s;"></span><span style="font-family:var(--font-sans);font-size:calc(11px * var(--text-scale));font-weight:600;letter-spacing:0.1em;color:var(--text-strong);">Sativa</span></span>
+          <span style="display:flex;align-items:center;gap:6px;"><span class="nsm-type-dot" style="width:12px;height:12px;border-radius:50%;background:#1faa6b;animation-delay:1.2s;"></span><span style="font-family:var(--font-sans);font-size:calc(11px * var(--text-scale));font-weight:600;letter-spacing:0.1em;color:var(--text-strong);">Hybrid</span></span>
+          <span style="display:flex;align-items:center;gap:6px;"><span class="nsm-type-dot" style="width:12px;height:12px;border-radius:50%;background:var(--ns-midnight);animation-delay:2.4s;"></span><span style="font-family:var(--font-sans);font-size:calc(11px * var(--text-scale));font-weight:600;letter-spacing:0.1em;color:var(--text-strong);">Indica</span></span>
         </div>
         <p style="margin:0;font-family:var(--font-display);font-weight:400;font-size:clamp(calc(28px * var(--text-scale)),8vw,calc(42px * var(--text-scale)));line-height:1.12;letter-spacing:-0.005em;color:var(--text-strong);text-wrap:balance;">Two indicas can feel completely different.</p>
         <p style="margin:18px auto 0;max-width:44ch;font-family:var(--font-sans);font-size:calc(15px * var(--text-scale));line-height:1.7;color:var(--text-body);">The category sets an expectation. The terpenes and cannabinoids inside decide the experience. <span style="color:var(--ns-bronze);">That is why this guide leans on lab data, not just the label.</span></p>
@@ -551,7 +570,7 @@
     <img data-para="0.5" data-base="" data-kb="1" src="assets/facility/hands-trim.jpg" alt="" aria-hidden="true" style="position:absolute;inset:-8% 0;width:100%;height:116%;object-fit:cover;opacity:0.6;filter:sepia(0.4) saturate(1.15) brightness(0.95);">
     <div aria-hidden="true" style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(22,26,43,0.55),rgba(22,26,43,0.8));"></div>
     <div data-reveal="" style="opacity:0;transform:translateY(24px);transition:opacity .9s ease,transform .9s cubic-bezier(.2,.7,.25,1);position:relative;max-width:520px;text-align:center;">
-      <img src="assets/brand/leaf-glyph-bronze.png" alt="" style="width:38px;height:38px;object-fit:contain;opacity:0.9;margin:0 auto 22px;display:block;">
+      <img src="assets/brand/leaf-glyph-bronze.png" alt="" style="display:none;">
       <p style="margin:0;font-family:var(--font-serif);font-style:italic;font-size:clamp(calc(26px * var(--text-scale)),7vw,calc(38px * var(--text-scale)));line-height:1.28;color:var(--ns-arctic);">“Peace is our natural state of being.”</p>
       <p style="margin:20px 0 0;font-family:var(--font-sans);font-size:calc(11px * var(--text-scale));font-weight:600;letter-spacing:0.24em;text-transform:uppercase;color:var(--ns-bronze);">Laozi</p>
     </div>
@@ -715,8 +734,8 @@
   <!-- ============ 07 · HOW IT'S GROWN ============ -->
   <section id="chap-grow" data-cnum="07" data-clabel="How It's Grown" style="position:relative;background:var(--ns-midnight);padding:0 0 68px;overflow:hidden;">
     <div style="position:relative;height:56svh;min-height:340px;overflow:hidden;">
-      <img data-para="0.6" data-base="" data-kb="1" src="assets/grow/hero.jpg" alt="NSM cultivation" style="position:absolute;inset:-8% 0;width:100%;height:116%;object-fit:cover;filter:sepia(0.5) saturate(1.2) hue-rotate(-12deg) brightness(0.92);">
-      <div aria-hidden="true" style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(32,37,58,0.55) 0%,rgba(32,37,58,0.42) 38%,rgba(32,37,58,1) 100%);"></div>
+      <img data-para="0.6" data-base="" data-kb="1" src="assets/grow/hero.jpg" alt="NSM cultivation" style="position:absolute;inset:-8% 0;width:100%;height:116%;object-fit:cover;object-position:50% 32%;filter:sepia(0.22) saturate(1.05) brightness(1.06);">
+      <div aria-hidden="true" style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(32,37,58,0.30) 0%,rgba(32,37,58,0.20) 42%,rgba(32,37,58,0.96) 100%);"></div>
       <div data-reveal="" style="opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.25,1);position:absolute;left:22px;right:22px;bottom:26px;">
         <span style="font-family:var(--font-sans);font-size:calc(11px * var(--text-scale));font-weight:600;letter-spacing:0.2em;color:var(--ns-bronze);text-transform:uppercase;">07 · The people behind the plant</span>
         <h2 style="margin:8px 0 0;font-family:var(--font-display);font-weight:400;font-size:calc(42px * var(--text-scale));line-height:0.96;letter-spacing:-0.01em;color:var(--ns-arctic);">How It's Grown</h2>
@@ -733,7 +752,7 @@
               <h3 style="margin:0;font-family:var(--font-display);font-weight:400;font-size:calc(28px * var(--text-scale));line-height:0.95;letter-spacing:0.01em;color:var(--ns-arctic);">{{ g.name }}</h3>
             </div>
             <figure style="margin:0 0 14px;border-radius:8px;overflow:hidden;box-shadow:0 18px 44px rgba(0,0,0,0.4);">
-              <sc-if value="{{ g.img }}" hint-placeholder-val="{{ false }}"><img data-para="0.35" data-base="" data-src="{{ g.img }}" alt="{{ g.name }}" loading="lazy" style="width:100%;aspect-ratio:16/10;object-fit:cover;display:block;filter:sepia(0.32) saturate(1.12) brightness(0.98);"></sc-if>
+              <sc-if value="{{ g.img }}" hint-placeholder-val="{{ false }}"><img data-para="0.35" data-base="" data-src="{{ g.img }}" alt="{{ g.name }}" loading="lazy" style="width:100%;aspect-ratio:4/3;object-fit:cover;object-position:{{ g.pos }};display:block;filter:sepia(0.32) saturate(1.12) brightness(0.98);"></sc-if>
             </figure>
             <p style="margin:0;font-size:calc(15px * var(--text-scale));line-height:1.68;color:rgba(245,244,225,0.84);">{{ g.copy }}</p>
           </div>
@@ -768,24 +787,24 @@
           <sc-for list="{{ extraction }}" as="e" hint-placeholder-count="4">
             <div style="border-bottom:1px solid rgba(245,244,225,0.08);">
               <button onClick="{{ e.onToggle }}" style="display:grid;grid-template-columns:minmax(0,1fr) 34px;gap:10px;align-items:center;width:100%;background:{{ e.rowBg }};border:none;cursor:pointer;text-align:left;padding:14px 12px;">
-                <span style="min-width:0;display:flex;flex-direction:column;gap:8px;">
+                <span style="min-width:0;display:flex;flex-direction:column;gap:7px;">
                   <span style="display:flex;align-items:baseline;gap:9px;">
                     <span style="font-family:var(--font-sans);font-size:calc(11px * var(--text-scale));color:var(--ns-bronze);">{{ e.n }}</span>
                     <span style="font-family:var(--font-sans);font-size:calc(16px * var(--text-scale));font-weight:600;line-height:1.1;color:var(--ns-arctic);">{{ e.name }}</span>
                   </span>
                   <span style="font-family:var(--font-sans);font-size:calc(12px * var(--text-scale));line-height:1.4;color:var(--text-on-dark-mut);">{{ e.sep }}</span>
-                  <span style="display:flex;flex-direction:column;gap:5px;margin-top:2px;">
-                    <span style="display:flex;align-items:center;gap:8px;">
-                      <span style="flex:none;width:52px;font-family:var(--font-sans);font-size:calc(9px * var(--text-scale));font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-on-dark-mut);">Flavor</span>
-                      <span style="display:flex;gap:4px;"><sc-for list="{{ e.fPips }}" as="p" hint-placeholder-count="3"><span style="width:7px;height:7px;border-radius:50%;background:{{ p.c }};"></span></sc-for></span>
+                  <span style="display:flex;gap:14px;margin-top:2px;">
+                    <span style="flex:1;display:flex;flex-direction:column;gap:4px;">
+                      <span style="font-family:var(--font-sans);font-size:calc(8.5px * var(--text-scale));font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-on-dark-mut);">Flavor</span>
+                      <span style="display:block;height:4px;border-radius:999px;background:rgba(245,244,225,0.14);overflow:hidden;"><span style="display:block;height:100%;width:{{ e.fW }};background:var(--ns-bronze);border-radius:999px;"></span></span>
                     </span>
-                    <span style="display:flex;align-items:center;gap:8px;">
-                      <span style="flex:none;width:52px;font-family:var(--font-sans);font-size:calc(9px * var(--text-scale));font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-on-dark-mut);">Purity</span>
-                      <span style="display:flex;gap:4px;"><sc-for list="{{ e.pPips }}" as="p" hint-placeholder-count="3"><span style="width:7px;height:7px;border-radius:50%;background:{{ p.c }};"></span></sc-for></span>
+                    <span style="flex:1;display:flex;flex-direction:column;gap:4px;">
+                      <span style="font-family:var(--font-sans);font-size:calc(8.5px * var(--text-scale));font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-on-dark-mut);">Purity</span>
+                      <span style="display:block;height:4px;border-radius:999px;background:rgba(245,244,225,0.14);overflow:hidden;"><span style="display:block;height:100%;width:{{ e.pW }};background:var(--ns-bronze);border-radius:999px;"></span></span>
                     </span>
-                    <span style="display:flex;align-items:center;gap:8px;">
-                      <span style="flex:none;width:52px;font-family:var(--font-sans);font-size:calc(9px * var(--text-scale));font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-on-dark-mut);">Scale</span>
-                      <span style="display:flex;gap:4px;"><sc-for list="{{ e.sPips }}" as="p" hint-placeholder-count="3"><span style="width:7px;height:7px;border-radius:50%;background:{{ p.c }};"></span></sc-for></span>
+                    <span style="flex:1;display:flex;flex-direction:column;gap:4px;">
+                      <span style="font-family:var(--font-sans);font-size:calc(8.5px * var(--text-scale));font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-on-dark-mut);">Scale</span>
+                      <span style="display:block;height:4px;border-radius:999px;background:rgba(245,244,225,0.14);overflow:hidden;"><span style="display:block;height:100%;width:{{ e.sW }};background:var(--ns-bronze);border-radius:999px;"></span></span>
                     </span>
                   </span>
                 </span>
@@ -960,7 +979,7 @@
                   <span style="font-family:var(--font-sans);font-size:calc(10px * var(--text-scale));font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-on-dark-mut);">Duration</span>
                   <span style="font-family:var(--font-sans);font-size:calc(13px * var(--text-scale));color:var(--ns-arctic);">{{ onset.cur.duration }}</span>
                 </div>
-                <span style="display:block;height:8px;background:rgba(245,244,225,0.1);border-radius:999px;overflow:hidden;position:relative;"><span style="position:absolute;left:0;top:0;bottom:0;width:{{ onset.durW }};background:linear-gradient(90deg,rgba(245,244,225,0.55),rgba(245,244,225,0.2));border-radius:999px;transition:width .5s cubic-bezier(.2,.7,.25,1);"></span></span>
+                <span style="display:block;height:8px;background:rgba(245,244,225,0.12);border-radius:999px;overflow:hidden;position:relative;"><span style="position:absolute;left:0;top:0;bottom:0;width:{{ onset.durW }};background:linear-gradient(90deg,#cdb074,rgba(183,149,80,0.45));border-radius:999px;transition:width .5s cubic-bezier(.2,.7,.25,1);"></span></span>
               </div>
             </div>
             <div style="margin-top:18px;display:flex;gap:20px;">
@@ -1068,7 +1087,7 @@
             <button onClick="{{ copyJournal }}" style="flex:1;min-height:48px;background:var(--ns-bronze);color:var(--ns-midnight);border:none;border-radius:4px;cursor:pointer;font-family:var(--font-sans);font-size:calc(12.5px * var(--text-scale));font-weight:600;letter-spacing:0.1em;text-transform:uppercase;box-shadow:var(--shadow-bronze);">{{ journalCopyLabel }}</button>
             <button onClick="{{ downloadJournal }}" style="flex:1;min-height:48px;background:var(--ns-midnight);color:var(--ns-arctic);border:none;border-radius:4px;cursor:pointer;font-family:var(--font-sans);font-size:calc(12.5px * var(--text-scale));font-weight:600;letter-spacing:0.1em;text-transform:uppercase;">Download .txt</button>
           </div>
-          <p style="margin:16px 0 0;font-family:var(--font-sans);font-size:calc(9.5px * var(--text-scale));font-weight:600;letter-spacing:0.2em;color:var(--text-faint);text-transform:uppercase;">Natural State Medicinals · Permit No. {{ permit }}</p>
+          <p style="margin:16px 0 0;font-family:var(--font-sans);font-size:calc(9.5px * var(--text-scale));font-weight:600;letter-spacing:0.2em;color:var(--text-faint);text-transform:uppercase;display:none;">Natural State Medicinals · Permit No. {{ permit }}</p>
         </div>
       </div>
     </div>
@@ -1089,25 +1108,31 @@
       </div>
 
       <!-- recipe index -->
-      <div id="sec-decarb" style="margin-top:20px;display:flex;flex-direction:column;gap:22px;">
+      <div id="sec-decarb" style="margin-top:18px;display:flex;flex-direction:column;gap:9px;">
         <sc-for list="{{ recipeGroups }}" as="g" hint-placeholder-count="6">
-          <div data-reveal="" style="opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s cubic-bezier(.2,.7,.25,1);">
-            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;border-bottom:1px solid var(--ns-bronze);padding-bottom:9px;">
-              <span style="font-family:var(--font-display);font-weight:400;font-size:calc(22px * var(--text-scale));line-height:1;color:var(--text-strong);">{{ g.name }}</span>
-              <span style="font-family:var(--font-sans);font-size:calc(11px * var(--text-scale));letter-spacing:0.02em;color:var(--text-muted);text-align:right;">{{ g.desc }}</span>
-            </div>
-            <div style="display:flex;flex-direction:column;">
-              <sc-for list="{{ g.items }}" as="r" hint-placeholder-count="5">
-                <button onClick="{{ r.onOpen }}" style="display:flex;align-items:center;gap:13px;width:100%;background:none;border:none;border-bottom:1px solid var(--border-hairline);padding:14px 2px;cursor:pointer;text-align:left;">
-                  <span style="flex:none;min-width:22px;font-family:var(--font-sans);font-size:calc(11px * var(--text-scale));color:var(--ns-bronze);">{{ r.num }}</span>
-                  <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;">
-                    <span style="font-family:var(--font-sans);font-weight:600;font-size:calc(15.5px * var(--text-scale));line-height:1.25;color:var(--text-strong);">{{ r.name }}</span>
-                    <span style="font-family:var(--font-sans);font-size:calc(11.5px * var(--text-scale));line-height:1.3;color:var(--text-muted);">{{ r.meta }}</span>
-                  </span>
-                  <span style="flex:none;color:var(--ns-bronze);font-size:calc(15px * var(--text-scale));">→</span>
-                </button>
-              </sc-for>
-            </div>
+          <div data-reveal="" style="opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s cubic-bezier(.2,.7,.25,1);border:1px solid var(--border-hairline);background:var(--ns-cream);overflow:hidden;">
+            <button onClick="{{ g.onToggle }}" style="display:flex;align-items:center;gap:12px;width:100%;background:none;border:none;cursor:pointer;text-align:left;padding:15px 16px;min-height:48px;">
+              <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;">
+                <span style="font-family:var(--font-display);font-weight:400;font-size:calc(21px * var(--text-scale));line-height:1.02;color:var(--text-strong);">{{ g.name }}</span>
+                <span style="font-family:var(--font-sans);font-size:calc(11px * var(--text-scale));line-height:1.3;color:var(--text-muted);">{{ g.desc }}</span>
+              </span>
+              <span style="flex:none;font-family:var(--font-sans);font-size:calc(11px * var(--text-scale));color:var(--text-faint);">{{ g.count }}</span>
+              <span style="flex:none;display:grid;place-items:center;width:30px;height:30px;border:1px solid rgba(32,37,58,0.22);border-radius:50%;color:var(--ns-bronze);font-size:calc(17px * var(--text-scale));">{{ g.caret }}</span>
+            </button>
+            <sc-if value="{{ g.open }}" hint-placeholder-val="{{ false }}">
+              <div class="nsm-exp" style="display:flex;flex-direction:column;background:var(--ns-arctic);border-top:1px solid var(--border-hairline);">
+                <sc-for list="{{ g.items }}" as="r" hint-placeholder-count="5">
+                  <button onClick="{{ r.onOpen }}" style="display:flex;align-items:center;gap:12px;width:100%;background:none;border:none;border-bottom:1px solid var(--border-hairline);padding:11px 16px;cursor:pointer;text-align:left;min-height:46px;">
+                    <span style="flex:none;min-width:20px;font-family:var(--font-sans);font-size:calc(10.5px * var(--text-scale));color:var(--ns-bronze);">{{ r.num }}</span>
+                    <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:1px;">
+                      <span style="font-family:var(--font-sans);font-weight:600;font-size:calc(14.5px * var(--text-scale));line-height:1.25;color:var(--text-strong);">{{ r.name }}</span>
+                      <span style="font-family:var(--font-sans);font-size:calc(10.5px * var(--text-scale));line-height:1.3;color:var(--text-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ r.meta }}</span>
+                    </span>
+                    <span style="flex:none;color:var(--ns-bronze);font-size:calc(13px * var(--text-scale));">→</span>
+                  </button>
+                </sc-for>
+              </div>
+            </sc-if>
           </div>
         </sc-for>
         <p style="margin:0;font-family:var(--font-sans);font-style:italic;font-size:calc(12.5px * var(--text-scale));line-height:1.55;color:var(--text-muted);">Short on time? Our infused tincture drops straight into most recipes, no decarb or straining required.</p>
@@ -1195,28 +1220,40 @@
         <button onClick="{{ sheet.onClose }}" aria-label="Close" style="flex:none;display:grid;place-items:center;width:44px;height:44px;background:none;border:1px solid rgba(32,37,58,0.22);border-radius:999px;cursor:pointer;color:var(--text-strong);font-size:calc(17px * var(--text-scale));">✕</button>
       </div>
       <div style="flex:1;overflow-y:auto;padding:20px 18px 30px;">
-        <sc-if value="{{ sheet.meta }}" hint-placeholder-val="{{ false }}">
-          <p style="margin:0 0 16px;font-family:var(--font-sans);font-size:calc(12px * var(--text-scale));font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--ns-bronze);">{{ sheet.meta }}</p>
+        <div style="display:flex;flex-wrap:wrap;gap:20px;padding-bottom:16px;border-bottom:1px solid var(--border-hairline);">
+          <sc-if value="{{ sheet.meta }}" hint-placeholder-val="{{ false }}">
+            <span style="display:flex;flex-direction:column;gap:3px;"><span style="font-family:var(--font-sans);font-size:calc(9px * var(--text-scale));font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-muted);">Dose / time</span><span style="font-family:var(--font-sans);font-size:calc(13.5px * var(--text-scale));color:var(--text-strong);">{{ sheet.meta }}</span></span>
+          </sc-if>
+          <sc-if value="{{ sheet.hasIng }}" hint-placeholder-val="{{ false }}">
+            <span style="display:flex;flex-direction:column;gap:3px;"><span style="font-family:var(--font-sans);font-size:calc(9px * var(--text-scale));font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-muted);">Ingredients</span><span style="font-family:var(--font-sans);font-size:calc(13.5px * var(--text-scale));color:var(--text-strong);">{{ sheet.ingCount }}</span></span>
+          </sc-if>
+          <span style="display:flex;flex-direction:column;gap:3px;"><span style="font-family:var(--font-sans);font-size:calc(9px * var(--text-scale));font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-muted);">Steps</span><span style="font-family:var(--font-sans);font-size:calc(13.5px * var(--text-scale));color:var(--text-strong);">{{ sheet.stepCount }}</span></span>
+        </div>
+        <sc-if value="{{ sheet.copy }}" hint-placeholder-val="{{ false }}">
+          <p style="margin:18px 0 0;font-family:var(--font-sans);font-size:calc(15.5px * var(--text-scale));line-height:1.7;color:var(--text-body);">{{ sheet.copy }}</p>
         </sc-if>
-        <sc-if value="{{ sheet.isBase }}" hint-placeholder-val="{{ false }}">
-          <p style="margin:0;font-family:var(--font-sans);font-size:calc(15.5px * var(--text-scale));line-height:1.7;color:var(--text-body);">{{ sheet.copy }}</p>
-        </sc-if>
-        <sc-if value="{{ sheet.isDish }}" hint-placeholder-val="{{ false }}">
-          <div>
+        <sc-if value="{{ sheet.hasIng }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:22px;">
             <span style="font-family:var(--font-sans);font-size:calc(10px * var(--text-scale));font-weight:600;letter-spacing:0.16em;color:var(--ns-bronze);text-transform:uppercase;">Ingredients</span>
-            <ul style="margin:10px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px;">
+            <ul style="margin:12px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:9px;">
               <sc-for list="{{ sheet.ingredients }}" as="i" hint-placeholder-count="5">
-                <li style="display:flex;align-items:flex-start;gap:9px;font-family:var(--font-sans);font-size:calc(14.5px * var(--text-scale));line-height:1.5;color:var(--text-body);"><span style="flex:none;width:5px;height:5px;border-radius:50%;background:var(--ns-bronze);margin-top:7px;"></span>{{ i }}</li>
+                <li style="display:flex;align-items:flex-start;gap:10px;font-family:var(--font-sans);font-size:calc(15px * var(--text-scale));line-height:1.55;color:var(--text-body);"><span style="flex:none;width:5px;height:5px;border-radius:50%;background:var(--ns-bronze);margin-top:8px;"></span>{{ i }}</li>
               </sc-for>
             </ul>
           </div>
-          <div style="margin-top:22px;border-top:1px solid var(--border-hairline);padding-top:18px;">
-            <span style="font-family:var(--font-sans);font-size:calc(10px * var(--text-scale));font-weight:600;letter-spacing:0.16em;color:var(--ns-bronze);text-transform:uppercase;">Method</span>
-            <ol style="margin:12px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:14px;">
-              <sc-for list="{{ sheet.steps }}" as="st" hint-placeholder-count="4">
-                <li style="display:flex;gap:12px;font-family:var(--font-sans);font-size:calc(14.5px * var(--text-scale));line-height:1.6;color:var(--text-body);"><span style="flex:none;display:grid;place-items:center;width:24px;height:24px;background:var(--ns-midnight);color:var(--ns-bronze);border-radius:50%;font-size:calc(12px * var(--text-scale));font-weight:600;align-self:flex-start;">{{ st.n }}</span><span>{{ st.text }}</span></li>
-              </sc-for>
-            </ol>
+        </sc-if>
+        <div style="margin-top:24px;border-top:1px solid var(--border-hairline);padding-top:20px;">
+          <span style="font-family:var(--font-sans);font-size:calc(10px * var(--text-scale));font-weight:600;letter-spacing:0.16em;color:var(--ns-bronze);text-transform:uppercase;">Method</span>
+          <ol style="margin:14px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:16px;">
+            <sc-for list="{{ sheet.steps }}" as="st" hint-placeholder-count="4">
+              <li style="display:flex;gap:13px;font-family:var(--font-sans);font-size:calc(15px * var(--text-scale));line-height:1.62;color:var(--text-body);"><span style="flex:none;display:grid;place-items:center;width:26px;height:26px;background:var(--ns-midnight);color:var(--ns-bronze);border-radius:50%;font-size:calc(12.5px * var(--text-scale));font-weight:600;align-self:flex-start;">{{ st.n }}</span><span>{{ st.text }}</span></li>
+            </sc-for>
+          </ol>
+        </div>
+        <sc-if value="{{ sheet.hasTip }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:22px;background:var(--ns-cream);border-left:3px solid var(--ns-bronze);padding:15px 16px;">
+            <span style="font-family:var(--font-sans);font-size:calc(9.5px * var(--text-scale));font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:var(--ns-bronze);">Worth knowing</span>
+            <p style="margin:7px 0 0;font-family:var(--font-sans);font-size:calc(14.5px * var(--text-scale));line-height:1.62;color:var(--text-body);">{{ sheet.tip }}</p>
           </div>
         </sc-if>
       </div>
@@ -1300,10 +1337,10 @@
 
   <!-- ============ FOOTER ============ -->
   <footer style="position:relative;background:var(--ns-midnight);padding:56px 24px 40px;text-align:center;overflow:hidden;">
-    <img src="assets/brand/leaf-glyph-bronze.png" alt="" style="width:44px;height:44px;object-fit:contain;opacity:0.9;margin:0 auto 16px;display:block;">
+    <img src="assets/brand/ns-monogram-gold.png" alt="" style="width:52px;height:auto;object-fit:contain;margin:0 auto 16px;display:block;">
     <p style="margin:0;font-family:var(--font-display);font-size:calc(26px * var(--text-scale));line-height:1.1;color:var(--ns-arctic);">Find your natural state.</p>
-    <p style="margin:16px auto 0;max-width:40ch;font-family:var(--font-sans);font-size:calc(11.5px * var(--text-scale));line-height:1.7;color:var(--text-on-dark-mut);">Natural State Medicinals · Permit No. {{ permit }} · Est. {{ est }} · {{ place }}</p>
-    <p style="margin:18px auto 0;max-width:44ch;font-family:var(--font-sans);font-size:calc(10.5px * var(--text-scale));line-height:1.6;color:rgba(245,244,225,0.42);">For use by qualified patients only. Keep out of reach of children. Marijuana is not approved by the FDA to treat, cure, or prevent any disease. This guide is education, not medical advice.</p>
+    <p style="margin:16px auto 0;max-width:40ch;font-family:var(--font-sans);font-size:calc(11.5px * var(--text-scale));line-height:1.7;color:var(--text-on-dark-mut);display:none;">Natural State Medicinals · Permit No. {{ permit }} · Est. {{ est }} · {{ place }}</p>
+    <p style="margin:18px auto 0;max-width:44ch;font-family:var(--font-sans);font-size:calc(10.5px * var(--text-scale));line-height:1.6;color:rgba(245,244,225,0.42);">For use by qualifying patients only. Keep out of reach of children. This product is not approved by the FDA to treat, cure, or prevent any disease. Marijuana use during pregnancy or breastfeeding poses potential harms. This guide is education, not medical advice.</p>
   </footer>
 
 </div>
@@ -1314,6 +1351,7 @@ class Component extends DCLogic {
     super(props);
     this.state = {
       navOpen:false,
+      openCat:null,
       concIdx:0,
       openTopic:null, openGrow:null, openRecipe:null,
       sheetKey:null,
@@ -1384,7 +1422,7 @@ class Component extends DCLogic {
         if(!this.reduced){ const vh=window.innerHeight; for(const el of shapes){ const r=el.getBoundingClientRect(); const off=(r.top+r.height/2)-vh/2; let t=(el.getAttribute('data-base')||''); if(el.hasAttribute('data-para')){ const sp=parseFloat(el.getAttribute('data-para'))||0; t+=' translate3d(0,'+(off*sp*-0.06).toFixed(1)+'px,0)'; } if(el.hasAttribute('data-kb')){ const prog=Math.min(1,Math.max(0,1-(r.top+r.height/2)/(vh+r.height))); t+=' scale('+(1.04+prog*0.12).toFixed(3)+')'; } el.style.transform=t; } }
         this._driveEnt();
         this._driveChap();
-        if(!this.reduced){ const lf=document.getElementById('nsm-leaf-field'); if(lf){ const r=lf.getBoundingClientRect(); const vh=window.innerHeight; const prog=Math.min(1,Math.max(0,(vh-r.top)/(vh+r.height))); lf.style.transform='rotate('+(prog*10-5).toFixed(2)+'deg)'; } }
+        if(!this.reduced){ const lf=document.getElementById('nsm-leaf-field'); if(lf){ const r=lf.getBoundingClientRect(); const vh=window.innerHeight; const prog=Math.min(1,Math.max(0,(vh-r.top)/(vh+r.height))); lf.style.transform='rotate('+(prog*20-10).toFixed(2)+'deg) scale('+(1.05+prog*0.14).toFixed(3)+') translate3d(0,'+((prog-0.5)*-46).toFixed(1)+'px,0)'; } }
         ticking=false;
       });
     };
@@ -1421,6 +1459,7 @@ class Component extends DCLogic {
   toggleExp(id){ this.setState(p=>({expanders:Object.assign({},p.expanders,{[id]:!p.expanders[id]})})); }
   toggleTopic(i){ this.setState(p=>({openTopic:p.openTopic===i?null:i})); }
   toggleGrow(i){ this.setState(p=>({openGrow:p.openGrow===i?null:i})); }
+  toggleCat(c){ this.setState(p=>({openCat:p.openCat===c?null:c})); }
   openSheet(k){ this.setState({sheetKey:k}); }
   closeSheet(){ this.setState({sheetKey:null}); }
   toggleGlossSection(){ this.setState(p=>({glossSectionOpen:!p.glossSectionOpen})); }
@@ -1613,7 +1652,7 @@ class Component extends DCLogic {
       return {
         name:s.name, dispName:(s.name||'').replace(/'/g,'\u2019'), anchor:this._slug(s.name),
         typeText:s.type||s.cat, catColor:this._catColor(s.cat), ratio:s.ratio||'', hasRatio:!!s.ratio,
-        thcText:s.thcRange||(s.thcAvg||''), thcAvg:s.thcAvg?('avg '+s.thcAvg):'', terpText:(s.terpMin&&s.terpMax)?(s.terpMin+'% \u2013 '+s.terpMax+'%'):(s.terpAvg?s.terpAvg+'%':'\u2014'),
+        thcText:s.thcRange||(s.thcAvg?(s.thcAvg+'%'):'\u2014'), thcAvg:s.thcAvg?('avg '+s.thcAvg):'', terpText:(s.terpMin&&s.terpMax)?(s.terpMin+'% \u2013 '+s.terpMax+'%'):(s.terpAvg?s.terpAvg+'%':'\u2014'),
         photo:s.photo||s.flowerPhoto||'', hasPhoto: !!(s.photo||s.flowerPhoto), noPhoto: !(s.photo||s.flowerPhoto),
         hasDescription: !!s.description, description:s.description||'',
         radar:(function(){ const full=(s.terpProfile||[]); if(!full.length) return null; const cx=108,cy=104,maxR=66; let rMax=0;
@@ -1673,7 +1712,7 @@ class Component extends DCLogic {
       ]},
       {kicker:'Arkansas',title:'A responsible patient',body:'Medical cannabis in Arkansas lives within rules and paperwork. Keep a valid registration card and purchase through licensed dispensaries. Understanding the framework is part of using it well.',discLabel:'On the amendments & home grow',sections:[
         {label:'The amendments',body:'Amendment 98 created the medical program, and Amendment 89 is the reference patients point to on person-to-person transfers. Sharing or handing off your medicine to another patient is not how the program is meant to work. When in doubt, confirm with your dispensary or the state program.'},
-        {label:'A note on home grow',body:'For the record, Arkansas law does not permit qualified patients to grow at home. So we are absolutely not suggesting you study The Cannabis Grow Bible (Greg Green), Marijuana Horticulture (Jorge Cervantes), or the Cannabis Grower\u2019s Handbook (Rosenthal & Downs). Strictly hypothetical. Know your state law.'}
+        {label:'A note on home grow',body:'Arkansas law does not permit qualified patients to grow at home, so nothing here should be read as encouragement. We would only note, as a matter of general literary awareness, that books like The Cannabis Grow Bible (Greg Green), Marijuana Horticulture (Jorge Cervantes), and the Cannabis Grower\u2019s Handbook (Rosenthal & Downs) exist, are widely available, and are said to be very thorough. Know your state law.'}
       ]},
       {kicker:'Anxiety',title:'If it comes on too strong',body:'Too much THC at once can tip a good feeling into a racing, uneasy one. It passes, and it is not dangerous, but it is worth avoiding. The fix is almost always less: a smaller dose, more time between, and a strain that leans calm rather than racy.',discLabel:'If you feel it coming on',sections:[
         {label:'Settle it',body:'Find somewhere comfortable, slow your breathing, and drink some water. Remind yourself it will fade on its own, usually within an hour or two. Nothing is wrong.'},
@@ -1719,7 +1758,8 @@ class Component extends DCLogic {
       {name:'Finished',img:'assets/grow/finished.jpg',copy:'Hand-trimmed, tested, and packaged. What reaches the shelf carries a lab certificate and the name of the people who grew it.'}
     ];
     const growAnchor={Clone:'sec-grow-clone',Harvest:'sec-grow-harvest',Finished:'sec-grow-finished'};
-    const growSteps=growRaw.map((g,i)=>({ num:String(i+1).padStart(2,'0'), name:g.name, img:g.img, copy:g.copy, anchor:growAnchor[g.name]||('sec-grow-'+g.name.toLowerCase()),
+    const growPos={Finished:'50% 20%',Cure:'50% 40%',Harvest:'50% 40%',Flower:'50% 45%',Clone:'50% 50%',Vegetative:'50% 45%'};
+    const growSteps=growRaw.map((g,i)=>({ num:String(i+1).padStart(2,'0'), name:g.name, img:g.img, copy:g.copy, pos:growPos[g.name]||'50% 40%', anchor:growAnchor[g.name]||('sec-grow-'+g.name.toLowerCase()),
       open: st.openGrow===i, caret: st.openGrow===i?'\u2212':'+', maxH: st.openGrow===i?'760px':'0px', op: st.openGrow===i?'1':'0', onToggle:()=>this.toggleGrow(i) }));
 
     // ---- Extraction (interactive cards) ----
@@ -1731,6 +1771,7 @@ class Component extends DCLogic {
       { sep:'Pressurized carbon dioxide', flavor:'Medium', purity:'High', scale:'High', tradeoff:'Clean, repeatable, and scales well. Some of the lightest aromatics are lost along the way.' },
       { sep:'Heat and vacuum', flavor:'Low', purity:'Highest', scale:'High', tradeoff:'Isolates a single cannabinoid to near purity, which means the character of the cultivar is left behind.' }
     ];
+    const exPct=(lvl)=>({Low:'33%',Medium:'66%',High:'100%',Highest:'100%'})[lvl]||'0%';
     const exPip=(lvl)=>{ const n={Low:1,Medium:2,High:3,Highest:3}[lvl]||0; return [1,2,3].map(k=>({ c: k<=n?'var(--ns-bronze)':'rgba(32,37,58,0.16)' })); };
     const extraction=(D.extraction||[]).map((e,i)=>{ const en=exp('ex|'+i); const d=e.desc||'';
       const cut=d.indexOf('. ');
@@ -1740,6 +1781,7 @@ class Component extends DCLogic {
         img, hasPhoto:!!img,
         sep:m.sep||'', flavor:m.flavor||'', purity:m.purity||'', scale:m.scale||'', tradeoff:m.tradeoff||'',
         fPips:exPip(m.flavor), pPips:exPip(m.purity), sPips:exPip(m.scale),
+        fW:exPct(m.flavor), pW:exPct(m.purity), sW:exPct(m.scale),
         rowBg: en.open?'rgba(183,149,80,0.10)':'transparent',
         open:en.open, caret:en.caret, onToggle:en.onToggle }; });
 
@@ -1784,25 +1826,46 @@ class Component extends DCLogic {
 
     // ---- Recipes: one index (Foundations + categories) -> full-screen sheet ----
     const BASE=[
-      {n:'01',name:'Decarb',meta:'240F \u00b7 40 min',copy:'Raw flower is full of THCA, not THC, so it will not do much in food until it is heated. Break up the flower, spread it on a lined tray, and bake at 240F for about 40 minutes until lightly golden. This is the step that turns the acid into active THC. Skip it and your edibles do nothing.'},
-      {n:'02',name:'Infused oil',meta:'160 to 200F \u00b7 2 to 3 hrs',copy:'Combine your decarbed flower with a cup of carrier oil (coconut, MCT, or olive). Warm gently in a double boiler, slow cooker, or mason jar in a water bath at 160 to 200F for two to three hours, never letting it simmer. Strain through cheesecloth. Use it anywhere a recipe calls for oil.'},
-      {n:'03',name:'Canna butter',meta:'Bare simmer \u00b7 2 to 3 hrs',copy:'Same method, with butter. Melt one cup butter with one cup water (the water buffers the heat), add decarbed flower, and hold at a bare simmer for two to three hours. Strain, chill, and lift the firm butter off the water. This is the workhorse for baking and savory dishes alike.'},
-      {n:'04',name:'Cooking tincture',meta:'Steep a few days',copy:'Cover decarbed flower with a high-proof, food-grade grain alcohol in a sealed jar. Let it steep for a few days, shaking daily, then strain through a coffee filter. A few dropperfuls dose and flavor drinks, dressings, and any no-heat dish, and it is the base for the cannasugar below.'},
-      {n:'05',name:'Cannasugar',meta:'From the tincture',copy:'Stir your cooking tincture into granulated sugar until evenly moistened, then spread it on a lined tray and let the alcohol fully evaporate, stirring now and then, until the sugar is dry and free-flowing again. Spoon for spoon it swaps in for regular sugar, in coffee, tea, baking, or a rim on the glass.'}
+      {n:'01',name:'Decarb',meta:'240F \u00b7 40 min',
+        why:'Raw flower is full of THCA, not THC. Heat converts it. Skip this step and your edibles will do nothing at all, no matter how much flower you use.',
+        steps:['Set the oven to 240F and let it come fully up to temperature.','Break the flower up by hand into rough, pea-sized pieces. Do not grind it to powder.','Spread it in a single even layer on a parchment-lined tray.','Bake 40 minutes, gently stirring once at the halfway mark.','Pull it when it is lightly golden and smells strongly nutty. Let it cool before using.'],
+        tip:'A low oven is the whole trick. Above 300F you start burning off the terpenes you are trying to keep.'},
+      {n:'02',name:'Infused oil',meta:'160 to 200F \u00b7 2 to 3 hrs',
+        why:'Cannabinoids bind to fat, not water. Oil is the carrier that carries them into anything you cook.',
+        steps:['Combine one cup of carrier oil (coconut, MCT, or olive) with your cooled decarbed flower.','Warm gently in a double boiler, slow cooker, or a sealed mason jar set in a water bath.','Hold it between 160 and 200F for two to three hours. It should never simmer or bubble.','Strain through cheesecloth into a clean jar. Squeeze, but do not wring it bitter.','Label it, date it, and refrigerate.'],
+        tip:'Anywhere a recipe calls for oil or fat, this goes in its place.'},
+      {n:'03',name:'Canna butter',meta:'Bare simmer \u00b7 2 to 3 hrs',
+        why:'The workhorse of the kitchen. Butter carries flavor as well as effect, which makes it the base for most baking and plenty of savory cooking.',
+        steps:['Melt one cup of butter with one cup of water. The water buffers the heat and keeps the milk solids from scorching.','Add your decarbed flower and stir to coat.','Hold at a bare simmer for two to three hours, stirring occasionally.','Strain through cheesecloth into a heatproof container.','Chill until firm, then lift the solid butter off the water underneath and discard the water.'],
+        tip:'Swap it one-for-one for regular butter, but remember that browning or frying hard will cost you potency.'},
+      {n:'04',name:'Cooking tincture',meta:'Steep a few days',
+        why:'An alcohol base instead of a fat base. It doses drinks, dressings, and anything you do not want to cook.',
+        steps:['Put your decarbed flower in a sealed glass jar and cover it with a high-proof, food-grade grain alcohol.','Store it somewhere cool and dark for several days, shaking it once a day.','Strain through a coffee filter into a dropper bottle.','Label it clearly, including the date.'],
+        tip:'A few dropperfuls is a serving. Start with one and wait, because this one arrives faster than an edible.'},
+      {n:'05',name:'Cannasugar',meta:'From the tincture',
+        why:'The most versatile thing on this list. It measures like sugar, stores like sugar, and disappears into anything sweet.',
+        steps:['Stir your finished tincture into granulated sugar until the sugar is evenly moistened but not soupy.','Spread it on a parchment-lined tray in a thin layer.','Leave it somewhere dry and airy until the alcohol fully evaporates, stirring now and then to break up clumps.','It is ready when it is dry and free-flowing again. Store it airtight.'],
+        tip:'Spoon for spoon it replaces regular sugar, in coffee, tea, baking, or rimming a glass.'}
     ];
     const sheets={};
-    const baseItems=BASE.map(b=>{ const id='base|'+b.n; sheets[id]={ kind:'base', name:b.name, kicker:'Base recipe', meta:b.meta, copy:b.copy, text:[b.name.toUpperCase(),'Base recipe \u00b7 '+b.meta,'',b.copy,'','Natural State Medicinals'].join('\n') };
+    const baseItems=BASE.map(b=>{ const id='base|'+b.n;
+      const txt=[b.name.toUpperCase(),'Base recipe \u00b7 '+b.meta,'',b.why,'','METHOD',...b.steps.map((x,n)=>'  '+(n+1)+'. '+x),'','NOTE',b.tip,'','Natural State Medicinals'].join('\n');
+      sheets[id]={ kind:'base', name:b.name, kicker:'Base recipe', meta:b.meta, copy:b.why, steps:b.steps.map((x,n)=>({n:n+1,text:x})), tip:b.tip, stepCount:b.steps.length, text:txt };
       return { id, num:b.n, name:b.name, meta:b.meta, onOpen:()=>this.openSheet(id) }; });
     const dishItems=(D.recipes||[]).map((r,i)=>{ const id='rec|'+i;
       const text=[r.name.toUpperCase(),(r.kind||'')+(r.dose?(' \u00b7 '+r.dose):''),'','INGREDIENTS',...(r.ingredients||[]).map(x=>'  \u2022 '+x),'','METHOD',...(r.steps||[]).map((x,n)=>'  '+(n+1)+'. '+x),'','Natural State Medicinals'].join('\n');
       sheets[id]={ kind:'dish', name:r.name, kicker:r.kind||'Recipe', meta:r.dose||'', ingredients:r.ingredients||[], steps:(r.steps||[]).map((x,n)=>({n:n+1,text:x})), text };
       return { id, num:'', name:r.name, meta:(r.dose||r.kind||''), cat:RECIPE_CAT[r.name]||'Mains & Bakes', onOpen:()=>this.openSheet(id) }; });
     const recipeGroups=[{ name:'Foundations', desc:'Start here \u00b7 decarb, oil, butter, tincture, sugar', items:baseItems }]
-      .concat(CAT_ORDER.filter(c=>dishItems.some(r=>r.cat===c)).map(c=>({ name:c, desc:CAT_DESC[c]||'', items:dishItems.filter(r=>r.cat===c) })));
+      .concat(CAT_ORDER.filter(c=>dishItems.some(r=>r.cat===c)).map(c=>({ name:c, desc:CAT_DESC[c]||'', items:dishItems.filter(r=>r.cat===c) })))
+      .map(g=>{ const open=st.openCat===g.name; return Object.assign({}, g, { open, count:g.items.length, caret: open?'\u2212':'+', onToggle:()=>this.toggleCat(g.name) }); });
     const sk=st.sheetKey; const s0=sk?sheets[sk]:null;
     const sheet={ open:!!s0, name:s0?s0.name:'', kicker:s0?s0.kicker:'', meta:s0?s0.meta:'',
       isBase: !!(s0&&s0.kind==='base'), isDish: !!(s0&&s0.kind==='dish'),
       copy:s0?(s0.copy||''):'', ingredients:s0?(s0.ingredients||[]):[], steps:s0?(s0.steps||[]):[],
+      tip:s0?(s0.tip||''):'', hasTip:!!(s0&&s0.tip),
+      ingCount:s0?((s0.ingredients||[]).length):0, hasIng:!!(s0&&(s0.ingredients||[]).length),
+      stepCount:s0?((s0.steps||[]).length):0,
       onClose:()=>this.closeSheet(),
       copyLabel: st.recipeCopied===sk?'Copied \u2713':'Copy',
       onCopy: s0?()=>this.copyRecipe(sk,s0.text):(()=>{}),

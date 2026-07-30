@@ -8,6 +8,9 @@
 <body>
 <x-dc>
 <helmet>
+<meta name="color-scheme" content="light only">
+<meta name="supported-color-schemes" content="light">
+<meta name="theme-color" content="#20253A">
 <link rel="stylesheet" href="fonts-local.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&amp;family=Bebas+Neue&amp;display=swap">
 <link rel="stylesheet" href="_ds/overbuilt-design-system-3b590326-9189-43e6-8372-d3f6399c38de/tokens/colors.css">
@@ -129,10 +132,24 @@
 <meta name="ext-resource-dependency" content="assets/extract/co2.jpg" data-resource-id="assets/extract/co2.jpg">
 <meta name="ext-resource-dependency" content="assets/extract/distillation.jpg" data-resource-id="assets/extract/distillation.jpg">
 <meta name="ext-resource-dependency" content="assets/kitchen/gems.jpg" data-resource-id="assets/kitchen/gems.jpg">
-<meta name="ext-resource-dependency" content="assets/brand/leaf-china-v2.png" data-resource-id="assets/brand/leaf-china-v2.png">
+<meta name="ext-resource-dependency" content="assets/brand/leaf-lattice-gold.png" data-resource-id="assets/brand/leaf-lattice-gold.png">
 <style>
-  html { scroll-behavior: smooth; }
-  :root { --text-scale: 1; --font-sans: 'Work Sans', system-ui, -apple-system, sans-serif; --font-varsity: 'Alfa Slab One', Georgia, serif; --font-banner: 'Bebas Neue', 'Work Sans', sans-serif; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; forced-color-adjust: none; -webkit-forced-color-adjust: none; }
+  /* Firefox/Chrome auto-dark re-tinted the whole palette brown-olive. Pin it. */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      color-scheme: light only;
+      --ns-arctic:#F5F4E1 !important; --ns-midnight:#20253A !important; --ns-bronze:#B79550 !important;
+      --ns-cream:#F6E7D7 !important; --ns-haze:#EFD7C5 !important;
+      --ns-bronze-dark:#97793c !important; --ns-bronze-light:#cdb074 !important;
+      --text-strong:#20253A !important; --text-body:rgba(32,37,58,0.88) !important;
+      --text-muted:rgba(32,37,58,0.60) !important; --text-faint:rgba(32,37,58,0.42) !important;
+      --text-on-dark:#F5F4E1 !important; --text-on-dark-mut:rgba(245,244,225,0.66) !important;
+      --border-hairline:rgba(32,37,58,0.12) !important; --border-on-dark:rgba(245,244,225,0.16) !important;
+    }
+    html, body { background:#F5F4E1 !important; color:#20253A !important; }
+  }
+  :root { color-scheme: light only; --text-scale: 1; --font-sans: 'Work Sans', system-ui, -apple-system, sans-serif; --font-varsity: 'Alfa Slab One', Georgia, serif; --font-banner: 'Bebas Neue', 'Work Sans', sans-serif; }
   /* Local brand-token fallbacks so the guide renders correctly even if the design-system CSS is not served (e.g. static hosting). */
   :root {
     --ns-arctic: #F5F4E1; --ns-midnight: #20253A; --ns-bronze: #B79550; --ns-cream: #F6E7D7; --ns-haze: #EFD7C5;
@@ -204,7 +221,9 @@
     #chap-welcome .nsm-hero-logo { width:clamp(112px,13vw,158px) !important; }
     #chap-welcome .nsm-hero-sub { font-size:calc(14px * var(--text-scale)) !important; max-width:44ch !important; }
   }
-  @media (prefers-reduced-motion: reduce){ .nsm-hero-bloom { animation:none !important; } }
+  @keyframes nsmDamaskDrift { from { background-position:0 0; } to { background-position:var(--damask-w,380px) var(--damask-w,380px); } }
+  .nsm-damask { animation:nsmDamaskDrift 150s linear infinite; }
+  @media (prefers-reduced-motion: reduce){ .nsm-hero-bloom, .nsm-damask { animation:none !important; } }
   @media (prefers-reduced-motion: reduce){ .nsm-radar-poly { animation:none; stroke-dashoffset:0; fill-opacity:1; } .nsm-strain-drawer { animation:none; } .nsm-grow-img, .nsm-ext-img, .nsm-conc-img, [data-cb-panel] { transition:none !important; } .nsm-grow-img.is-live { animation:none !important; transform:none !important; } }
   input::placeholder { color: rgba(32,37,58,0.42); }
   .nsm-grow-steps { display:flex; flex-direction:column; gap:64px; }
@@ -222,7 +241,13 @@
   @media (max-width: 600px) { .nsm-pin-wrap { height:auto; } .nsm-pin { position:static; height:62vh; } }
   .nsm-grow-scroller { display:grid; grid-template-columns:minmax(0,0.92fr) minmax(0,1.08fr); gap:clamp(30px,5vw,72px); align-items:start; }
   .nsm-grow-left { position:sticky; top:clamp(74px,12vh,104px); height:min(78vh,600px); z-index:2; }
-  .nsm-grow-img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center top; opacity:0; transition:opacity .6s ease; }
+  .nsm-grow-img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center top;
+    /* per-stage framing: several of these crop badly from centre-top */
+  }
+  .nsm-grow-img:nth-of-type(4) { object-position:center center; }
+  .nsm-grow-img:nth-of-type(6) { object-position:center center; }
+  .nsm-grow-img:nth-of-type(7) { object-position:center center; }
+  .nsm-grow-img { opacity:0; transition:opacity .6s ease; }
   /* Ken Burns: slow push/drift on the stage that is currently showing. Alternating
      directions per stage so consecutive crossfades never move the same way. */
   @keyframes nsmKenA { from { transform:scale(1.0) translate3d(0,0,0); } to { transform:scale(1.12) translate3d(-1.6%,-2.2%,0); } }
@@ -305,6 +330,7 @@
     <div id="nsm-progress" style="position:absolute;top:0;left:0;height:2px;width:0;background:var(--ns-bronze);"></div>
 
     <button onClick="{{ goHome }}" style="display:flex;align-items:center;gap:11px;background:none;border:none;cursor:pointer;padding:0;">
+      <img src="assets/brand/nav-mark-fanleaf.png" alt="" aria-hidden="true" style="flex:none;width:26px;height:26px;object-fit:contain;">
       <span class="nsm-brand-mark" style="display:none;font-family:var(--font-sans);font-size:calc(14px * var(--text-scale));font-weight:600;letter-spacing:0.14em;color:var(--ns-arctic);">NSM</span>
       <span data-navtext="" style="font-family:var(--font-sans);font-size:calc(11.5px * var(--text-scale));font-weight:600;letter-spacing:0.18em;color:var(--ns-arctic);">Natural State Medicinals</span>
     </button>
@@ -339,7 +365,7 @@
   <sc-if value="{{ navOpen }}" hint-placeholder-val="{{ false }}">
     <div id="nsm-overlay" onClick="{{ bgNav }}" style="position:fixed;inset:0;z-index:90;background:rgba(22,26,43,0.97);backdrop-filter:blur(6px);display:flex;flex-direction:column;padding:clamp(28px,6vh,64px) clamp(20px,6vw,80px);overflow-y:auto;">
       <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:clamp(28px,5vh,56px);">
-        <span style="display:inline-flex;flex-direction:column;gap:6px;"><span style="font-family:var(--font-display);font-weight:400;font-size:clamp(calc(22px * var(--text-scale)),3vw,calc(34px * var(--text-scale)));line-height:1;letter-spacing:0.06em;color:var(--ns-bronze);">The Doobie Decimal System</span><span style="font-family:var(--font-sans);font-size:calc(11px * var(--text-scale));font-weight:600;letter-spacing:0.22em;color:var(--text-on-dark-mut);">Thirteen chapters, and everything inside them</span></span>
+        <span style="display:inline-flex;align-items:center;gap:clamp(14px,2vw,22px);"><img src="assets/brand/contents-lockup.png" alt="Natural State Medicinals" style="flex:none;width:clamp(64px,8vw,96px);height:auto;display:block;"><span style="font-family:var(--font-display);font-weight:400;font-size:clamp(calc(24px * var(--text-scale)),3.4vw,calc(40px * var(--text-scale)));line-height:1.04;letter-spacing:0.05em;color:var(--ns-bronze);">The Doobie<br>Decimal System</span></span>
         <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end;">
           <div style="display:inline-flex;align-items:center;gap:8px;">
             <span style="font-family:var(--font-sans);font-size:calc(11px * var(--text-scale));font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-on-dark-mut);">Text size</span>
@@ -599,7 +625,7 @@
       <p class="nsm-hero-sub" style="margin:0;font-family:var(--font-sans);font-weight:300;font-size:clamp(calc(16px * var(--text-scale)),2vw,calc(23px * var(--text-scale)));line-height:1.5;letter-spacing:0.01em;color:var(--ns-bronze-light);max-width:32ch;text-wrap:balance;">A patient's companion to the plant, the practice, and the products.</p>
     </div>
 
-    <button class="nsm-hero-begin" onClick="{{ toggleNav }}" style="position:absolute;bottom:max(30px,env(safe-area-inset-bottom,30px));left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;background:none;border:none;cursor:pointer;animation:nsmFloat 2.6s ease-in-out infinite;">
+    <button class="nsm-hero-begin" onClick="{{ toggleNav }}" style="position:absolute;bottom:max(30px,env(safe-area-inset-bottom,30px));left:0;right:0;margin-inline:auto;width:max-content;display:flex;flex-direction:column;align-items:center;gap:8px;background:none;border:none;cursor:pointer;animation:nsmFloat 2.6s ease-in-out infinite;">
       <span style="font-family:var(--font-sans);font-size:calc(10.5px * var(--text-scale));letter-spacing:0.22em;color:var(--text-on-dark-mut);">Begin</span>
       <span style="color:var(--ns-bronze);font-size:calc(18px * var(--text-scale));line-height:1;">↓</span>
     </button>
@@ -614,7 +640,7 @@
         <div style="width:54px;height:2px;background:var(--ns-bronze);margin:26px 0;"></div>
         <p style="margin:0 0 18px;font-size:clamp(calc(16px * var(--text-scale)),1.5vw,calc(19px * var(--text-scale)));line-height:1.7;color:var(--text-body);">This guide is not a sales sheet. It is a patient's companion, a calm, unhurried walk through how cannabis meets the body, what the plant is actually made of, and how to use it with intention rather than guesswork.</p>
         <p style="margin:0;font-size:clamp(calc(16px * var(--text-scale)),1.5vw,calc(19px * var(--text-scale)));line-height:1.7;color:var(--text-body);">Read it cover to cover, or keep it nearby and return to the parts you need. However you use it, our hope is the same: that it helps you find your natural state, of wellness, balance, and relief.</p>
-        <p style="margin:18px 0 0;font-family:var(--font-sans);font-size:clamp(calc(14px * var(--text-scale)),1.3vw,calc(16px * var(--text-scale)));line-height:1.7;color:var(--text-muted);">New to this, or coming back after a while? Start with <a href="#chap-practice" style="color:var(--ns-bronze);text-decoration:underline;text-underline-offset:3px;">Using It Well</a>, dosing, onset, and what to do if it comes on too strong.</p>
+        
         <p style="margin:28px 0 0;font-family:var(--font-sans);font-size:calc(17px * var(--text-scale));color:var(--text-muted);">From your neighbors at <strong style="font-weight:700;color:var(--text-body);">Natural State Medicinals</strong></p>
       </div>
 
@@ -903,16 +929,11 @@
   </div>
   </div>
   <div id="sec-two-indicas" class="nsm-types-close" style="position:relative;overflow:hidden;background:radial-gradient(120% 90% at 50% 0%, var(--ns-haze) 0%, var(--ns-cream) 55%);padding:clamp(80px,14vh,160px) clamp(20px,6vw,80px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:72vh;">
-    <div aria-hidden="true" style="position:absolute;inset:0;background-image:url('assets/brand/leaf-china-v2.png');background-repeat:repeat;background-size:clamp(180px,17vw,240px);opacity:0.30;pointer-events:none;"></div>
-    <div aria-hidden="true" style="position:absolute;inset:0;background:radial-gradient(58% 52% at 50% 46%, var(--ns-cream) 30%, rgba(246,231,215,0.55) 62%, transparent 100%);pointer-events:none;"></div>
+    <div aria-hidden="true" class="nsm-damask" style="position:absolute;inset:0;background-image:url('assets/brand/leaf-lattice-gold.png');background-repeat:repeat;background-size:clamp(240px,24vw,340px);opacity:0.30;pointer-events:none;"></div>
+    <div aria-hidden="true" style="position:absolute;inset:0;background:radial-gradient(62% 56% at 50% 46%, var(--ns-cream) 42%, rgba(246,231,215,0.72) 70%, transparent 100%);pointer-events:none;"></div>
     <span style="position:relative;font-family:var(--font-sans);font-size:calc(11px * var(--text-scale));font-weight:600;letter-spacing:0.24em;text-transform:uppercase;color:var(--ns-bronze);">The point of all this</span>
-    <div aria-hidden="true" style="position:relative;display:flex;align-items:center;gap:clamp(16px,2.4vw,26px);margin:clamp(22px,3.2vh,32px) 0 clamp(24px,3.4vh,36px);">
-      
-      <span style="width:clamp(60px,10vw,120px);height:1px;background:linear-gradient(90deg,transparent,var(--ns-bronze),transparent);"></span>
-      
-    </div>
-    <p class="nsm-quote" style="position:relative;margin:0;max-width:20ch;font-family:var(--font-display);font-weight:400;font-size:clamp(calc(28px * var(--text-scale)),4.8vw,calc(64px * var(--text-scale)));line-height:1.06;letter-spacing:-0.005em;color:var(--text-strong);text-wrap:balance;">Two indicas can feel completely different.</p>
-    <p style="position: relative; margin: clamp(18px,2.6vh,28px) auto 0; max-width: 46ch; font-family: var(--font-sans); font-size: clamp(calc(15px * var(--text-scale)),1.55vw,calc(18px * var(--text-scale))); line-height: 1.7; color: var(--text-body); text-wrap: pretty; width: 673px; height: 97px">The category sets an expectation. The terpenes and cannabinoids inside decide the experience. <span style="color: var(--ns-bronze); width: 505px; height: 47px">That is why this guide leans on lab data, not just the label.</span></p>
+        <p class="nsm-quote" style="position:relative;margin:0;max-width:20ch;font-family:var(--font-display);font-weight:400;font-size:clamp(calc(28px * var(--text-scale)),4.8vw,calc(64px * var(--text-scale)));line-height:1.06;letter-spacing:-0.005em;color:var(--text-strong);text-wrap:balance;">Two indicas can feel completely different.</p>
+    <p style="position: relative; margin: clamp(18px,2.6vh,28px) auto 0; max-width: 46ch; font-family: var(--font-sans); font-size: clamp(calc(15px * var(--text-scale)),1.55vw,calc(18px * var(--text-scale))); line-height: 1.7; color: var(--text-body); text-wrap: pretty;">The category sets an expectation. The terpenes and cannabinoids inside decide the experience. <span style="color:var(--ns-bronze);">That is why this guide leans on lab data, not just the label.</span></p>
     <a href="#chap-terpenes" style="position:relative;display:inline-block;margin-top:clamp(24px,3.5vh,34px);font-family:var(--font-sans);font-size:calc(11px * var(--text-scale));font-weight:600;letter-spacing:0.14em;color:var(--ns-bronze);text-decoration:none;border-bottom:1px solid rgba(183,149,80,0.4);padding-bottom:3px;">Read about terpenes →</a>
   </div>
   </div>
@@ -1369,7 +1390,7 @@
     <!-- full-bleed hero -->
     <div style="position:relative;width:100%;height:clamp(420px,74vh,760px);overflow:hidden;">
       <img src="assets/grow/hero.jpg" alt="An NSM grower checking flowering plants under the grow lights" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;">
-      <div aria-hidden="true" style="position:absolute;inset:0;background:linear-gradient(180deg, rgba(32,37,58,0.35) 0%, rgba(32,37,58,0.15) 45%, rgba(32,37,58,0.92) 100%);"></div>
+      <div aria-hidden="true" style="position:absolute;inset:0;background:linear-gradient(180deg, rgba(32,37,58,0.18) 0%, rgba(32,37,58,0.04) 42%, rgba(32,37,58,0.82) 100%);"></div>
       <div data-reveal="" style="opacity:0;transform:translateY(22px);position:absolute;left:0;right:0;bottom:0;padding:clamp(28px,6vw,80px);max-width:1180px;margin:0 auto;">
         <span style="font-family:var(--font-sans);font-size:calc(12px * var(--text-scale));font-weight:600;letter-spacing:0.24em;color:#d8bd82;">Chapter Seven &nbsp;·&nbsp; The people behind the plant</span>
         <h2 style="margin:14px 0 0;font-family:var(--font-sans);font-weight:400;font-size:clamp(calc(40px * var(--text-scale)),8vw,calc(104px * var(--text-scale)));line-height:0.92;letter-spacing:0.01em;color:var(--ns-arctic);">How it's grown</h2>
@@ -1529,9 +1550,9 @@
                 <span style="font-family:var(--font-sans);font-weight:500;font-size:clamp(calc(15px * var(--text-scale)),1.7vw,calc(19px * var(--text-scale)));color:var(--ns-arctic);">{{ x.name }}</span>
               </span>
               <span style="font-family:var(--font-sans);font-size:calc(13.5px * var(--text-scale));line-height:1.45;color:rgba(245,244,225,0.72);">{{ x.separator }}</span>
-              <span style="display:inline-flex;align-items:center;gap:7px;"><span aria-hidden="true" style="display:inline-flex;gap:3px;"><span style="width:7px;height:7px;border-radius:50%;background:{{ x.f1 }};"></span><span style="width:7px;height:7px;border-radius:50%;background:{{ x.f2 }};"></span><span style="width:7px;height:7px;border-radius:50%;background:{{ x.f3 }};"></span></span><span style="font-family:var(--font-sans);font-size:calc(11.5px * var(--text-scale));color:rgba(245,244,225,0.6);">{{ x.flavor }}</span></span>
-              <span style="display:inline-flex;align-items:center;gap:7px;"><span aria-hidden="true" style="display:inline-flex;gap:3px;"><span style="width:7px;height:7px;border-radius:50%;background:{{ x.p1 }};"></span><span style="width:7px;height:7px;border-radius:50%;background:{{ x.p2 }};"></span><span style="width:7px;height:7px;border-radius:50%;background:{{ x.p3 }};"></span></span><span style="font-family:var(--font-sans);font-size:calc(11.5px * var(--text-scale));color:rgba(245,244,225,0.6);">{{ x.purity }}</span></span>
-              <span style="display:inline-flex;align-items:center;gap:7px;"><span aria-hidden="true" style="display:inline-flex;gap:3px;"><span style="width:7px;height:7px;border-radius:50%;background:{{ x.s1 }};"></span><span style="width:7px;height:7px;border-radius:50%;background:{{ x.s2 }};"></span><span style="width:7px;height:7px;border-radius:50%;background:{{ x.s3 }};"></span></span><span style="font-family:var(--font-sans);font-size:calc(11.5px * var(--text-scale));color:rgba(245,244,225,0.6);">{{ x.scale }}</span></span>
+              <span style="display:inline-flex;flex-direction:column;gap:5px;min-width:0;"><span style="font-family:var(--font-sans);font-size:calc(11.5px * var(--text-scale));color:rgba(245,244,225,0.72);">{{ x.flavor }}</span><span aria-hidden="true" style="display:block;height:4px;width:100%;max-width:74px;background:rgba(245,244,225,0.14);border-radius:999px;overflow:hidden;"><span style="display:block;height:100%;width:{{ x.flavorW }};background:var(--ns-bronze);border-radius:999px;"></span></span></span>
+              <span style="display:inline-flex;flex-direction:column;gap:5px;min-width:0;"><span style="font-family:var(--font-sans);font-size:calc(11.5px * var(--text-scale));color:rgba(245,244,225,0.72);">{{ x.purity }}</span><span aria-hidden="true" style="display:block;height:4px;width:100%;max-width:74px;background:rgba(245,244,225,0.14);border-radius:999px;overflow:hidden;"><span style="display:block;height:100%;width:{{ x.purityW }};background:var(--ns-bronze);border-radius:999px;"></span></span></span>
+              <span style="display:inline-flex;flex-direction:column;gap:5px;min-width:0;"><span style="font-family:var(--font-sans);font-size:calc(11.5px * var(--text-scale));color:rgba(245,244,225,0.72);">{{ x.scale }}</span><span aria-hidden="true" style="display:block;height:4px;width:100%;max-width:74px;background:rgba(245,244,225,0.14);border-radius:999px;overflow:hidden;"><span style="display:block;height:100%;width:{{ x.scaleW }};background:var(--ns-bronze);border-radius:999px;"></span></span></span>
               <span aria-hidden="true" style="justify-self:end;flex:none;width:26px;height:26px;border:1px solid {{ x.caretBorder }};border-radius:999px;display:grid;place-items:center;font-family:var(--font-sans);font-size:calc(15px * var(--text-scale));line-height:1;color:var(--ns-bronze);background:{{ x.caretBg }};transition:background .22s ease,border-color .22s ease;">{{ x.caret }}</span>
             </button>
             <sc-if value="{{ x.open }}" hint-placeholder-val="{{ false }}">
@@ -1795,7 +1816,7 @@
                 <span style="font-family:var(--font-sans);font-size:calc(11px * var(--text-scale));font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-on-dark-mut);">Duration</span>
                 <span style="font-family:var(--font-sans);font-size:calc(14px * var(--text-scale));color:var(--ns-arctic);">{{ onset.cur.duration }}</span>
               </div>
-              <span style="display:block;height:8px;background:rgba(245,244,225,0.1);border-radius:999px;overflow:hidden;position:relative;"><span style="position:absolute;left:0;top:0;bottom:0;width:{{ onset.durW }};background:linear-gradient(90deg,var(--ns-bronze),rgba(183,149,80,0.35));border-radius:999px;transition:width .45s cubic-bezier(0.2,0.7,0.25,1);"></span></span>
+              <span style="display:block;height:8px;background:rgba(245,244,225,0.1);border-radius:999px;overflow:hidden;position:relative;"><span style="position:absolute;left:0;top:0;bottom:0;width:{{ onset.durW }};background:var(--ns-bronze);border-radius:999px;transition:width .45s cubic-bezier(0.2,0.7,0.25,1);"></span></span>
             </div>
           </div>
           <div class="nsm-onset-foot" style="margin-top:24px;display:grid;grid-template-columns:minmax(0,0.8fr) minmax(0,1.2fr);gap:clamp(24px,4vw,56px);align-items:start;">
@@ -1862,7 +1883,7 @@
                 <li style="font-size:calc(14px * var(--text-scale));line-height:1.6;color:var(--text-body);"><strong>Marijuana Horticulture: The Indoor/Outdoor Medical Grower's Bible</strong>, Jorge Cervantes. A heavily illustrated 500-plus-page reference on plant anatomy, nutrients, pest management, and greenhouse setups.</li>
                 <li style="font-size:calc(14px * var(--text-scale));line-height:1.6;color:var(--text-body);"><strong>Cannabis Grower's Handbook</strong>, Ed Rosenthal and David Downs. A modern, science-forward guide to cultivation, lighting, and harvest.</li>
               </ol>
-              <p style="margin:14px 0 0;font-family:var(--font-sans);font-style:italic;font-size:calc(12.5px * var(--text-scale));line-height:1.5;color:var(--text-muted);">Strictly hypothetical. Know your state law. When in doubt, just visit your dispensary.</p>
+              
             </div>
           </sc-if>
         </div>
@@ -2133,7 +2154,15 @@
                   <span aria-hidden="true" style="flex:none;width:28px;height:28px;border:1px solid var(--ns-bronze);border-radius:999px;display:grid;place-items:center;font-family:var(--font-sans);font-size:calc(16px * var(--text-scale));line-height:1;color:var(--ns-bronze);">{{ b.caret }}</span>
                 </button>
                 <sc-if value="{{ b.open }}" hint-placeholder-val="{{ false }}">
-                  <p style="margin:0;padding:0 clamp(18px,2.2vw,26px) clamp(18px,2vw,24px) calc(clamp(18px,2.2vw,26px) + clamp(20px,2vw,26px) + 14px);font-family:var(--font-sans);font-size:calc(13.5px * var(--text-scale));line-height:1.7;color:rgba(245,244,225,0.82);">{{ b.body }}</p>
+                  <div style="padding:0 clamp(18px,2.2vw,26px) clamp(18px,2vw,24px) calc(clamp(18px,2.2vw,26px) + clamp(20px,2vw,26px) + 14px);display:flex;flex-direction:column;gap:14px;">
+                    <p style="margin:0;max-width:66ch;font-family:var(--font-sans);font-size:calc(13.5px * var(--text-scale));line-height:1.7;color:rgba(245,244,225,0.82);">{{ b.lead }}</p>
+                    <ol style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:9px;">
+                      <sc-for list="{{ b.steps }}" as="bs" hint-placeholder-count="4">
+                        <li style="font-family:var(--font-sans);font-size:calc(13.5px * var(--text-scale));line-height:1.6;color:rgba(245,244,225,0.82);">{{ bs }}</li>
+                      </sc-for>
+                    </ol>
+                    <p style="margin:0;max-width:66ch;border-top:1px solid var(--border-on-dark);padding-top:12px;font-family:var(--font-sans);font-size:calc(12.5px * var(--text-scale));line-height:1.6;color:rgba(245,244,225,0.6);"><strong style="font-weight:600;color:var(--ns-bronze);">Worth knowing: </strong>{{ b.note }}</p>
+                  </div>
                 </sc-if>
               </div>
             </sc-for>
@@ -2256,6 +2285,14 @@
               </div>
               <sc-if value="{{ r.open }}" hint-placeholder-val="{{ false }}">
                 <div style="padding:0 clamp(22px,2.4vw,30px) clamp(22px,2.4vw,30px);display:flex;flex-direction:column;gap:18px;">
+                  <div style="border-top:1px solid var(--border-hairline);padding-top:14px;display:flex;flex-wrap:wrap;gap:clamp(14px,2.4vw,30px);">
+                    <sc-for list="{{ r.meta }}" as="m" hint-placeholder-count="3">
+                      <span style="display:inline-flex;flex-direction:column;gap:3px;">
+                        <span style="font-family:var(--font-sans);font-size:calc(9.5px * var(--text-scale));font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-faint);">{{ m.k }}</span>
+                        <span style="font-family:var(--font-sans);font-size:calc(13px * var(--text-scale));color:var(--text-strong);">{{ m.v }}</span>
+                      </span>
+                    </sc-for>
+                  </div>
                   <div style="border-top:1px solid var(--border-hairline);padding-top:16px;">
                     <span style="font-family:var(--font-sans);font-size:calc(10px * var(--text-scale));font-weight:600;letter-spacing:0.18em;color:var(--ns-bronze);">Ingredients</span>
                     <ul style="margin:11px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:6px;">
@@ -2272,6 +2309,12 @@
                       </sc-for>
                     </ol>
                   </div>
+                  <sc-if value="{{ r.hasNote }}" hint-placeholder-val="{{ false }}">
+                    <div style="border-top:1px solid var(--border-hairline);padding-top:14px;">
+                      <span style="font-family:var(--font-sans);font-size:calc(10px * var(--text-scale));font-weight:600;letter-spacing:0.18em;color:var(--ns-bronze);">Worth knowing</span>
+                      <p style="margin:9px 0 0;max-width:62ch;font-family:var(--font-sans);font-size:calc(13px * var(--text-scale));line-height:1.62;color:var(--text-muted);">{{ r.note }}</p>
+                    </div>
+                  </sc-if>
                 </div>
               </sc-if>
                   </div>
@@ -2469,7 +2512,7 @@
   <footer style="position:relative;background:var(--ns-midnight);min-height:100svh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:clamp(80px,12vh,150px) clamp(20px,6vw,80px) clamp(120px,18vh,180px);overflow:hidden;">
     <div aria-hidden="true" style="position:absolute;top:-25%;left:50%;transform:translateX(-50%);width:90%;height:70%;background:radial-gradient(closest-side, rgba(183,149,80,0.10), rgba(32,37,58,0) 70%);pointer-events:none;"></div>
     <div style="position:relative;display:flex;flex-direction:column;align-items:center;gap:clamp(18px,3vh,30px);max-width:760px;margin:0 auto;">
-      <img src="assets/brand/primary-logo-light.png" alt="Natural State Medicinals" style="width:clamp(220px,30vw,380px);height:auto;display:block;filter:drop-shadow(0 18px 48px rgba(0,0,0,0.55));">
+      <img src="assets/brand/ns-monogram-gold.png" alt="Natural State Medicinals" style="width:clamp(96px,13vw,150px);height:auto;display:block;filter:drop-shadow(0 14px 38px rgba(0,0,0,0.5));">
       <h2 data-reveal="" style="opacity:0;transform:translateY(22px);margin:0;font-family:var(--font-sans);font-weight:400;font-size:clamp(calc(38px * var(--text-scale)),7vw,calc(92px * var(--text-scale)));line-height:0.96;letter-spacing:0.02em;color:var(--ns-arctic);">Find your<br>natural state.</h2>
       <div style="width:54px;height:2px;background:var(--ns-bronze);"></div>
       <p style="margin:0;font-family:var(--font-sans);font-size:clamp(calc(16px * var(--text-scale)),1.8vw,calc(20px * var(--text-scale)));color:var(--ns-bronze-light);">Of wellness, balance, and relief.</p>
@@ -2479,11 +2522,7 @@
   </footer>
 
   <div style="position:relative;background:var(--ns-midnight);border-top:1px solid var(--border-on-dark);padding:28px clamp(20px,6vw,80px) 36px;">
-    <div style="max-width:980px;margin:0 auto;display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center;">
-      <span style="font-family:var(--font-sans);font-size:calc(11px * var(--text-scale));letter-spacing:0.14em;color:var(--text-on-dark-mut);">Natural State Medicinals · Permit No. 00088 · Est. 2018 · Arkansas</span>
-      <span style="font-family:var(--font-sans);font-size:calc(11px * var(--text-scale));letter-spacing:0.14em;color:var(--text-on-dark-mut);">For use by qualified patients only</span>
-    </div>
-    <p style="max-width:980px;margin:18px auto 0;font-family:var(--font-sans);font-size:calc(11px * var(--text-scale));line-height:1.6;color:rgba(245,244,225,0.42);text-align:left;">This guide is for educational purposes only and is not medical advice. Cannabis affects each patient differently. Consult your healthcare provider, keep products away from children and pets, and do not drive or operate machinery while medicating. Keep your Arkansas medical registration current and purchase only through licensed dispensaries.</p>
+    <p style="max-width:980px;margin:18px auto 0;font-family:var(--font-sans);font-size:calc(11px * var(--text-scale));line-height:1.6;color:rgba(245,244,225,0.42);text-align:left;">For use by qualifying patients only. Keep out of reach of children. This product is not approved by the FDA to treat, cure, or prevent any disease. Marijuana use during pregnancy or breastfeeding poses potential harms. This guide is education, not medical advice.</p>
   </div>
 
   <!-- INSERT-POINT -->
@@ -4382,13 +4421,12 @@ class Component extends DCLogic {
           { sep: 'Pressurized carbon dioxide', flavor: 'Medium', purity: 'High', scale: 'High', tradeoff: 'Clean, repeatable, and scales well. Some of the lightest aromatics are lost along the way.' },
           { sep: 'Heat and vacuum', flavor: 'Low', purity: 'Highest', scale: 'High', tradeoff: 'Isolates a single cannabinoid to near purity, which means the character of the cultivar is left behind.' }
         ][i] || {};
-        const pip = (lvl) => { const n = { Low: 1, Medium: 2, High: 3, Highest: 3 }[lvl] || 0; return [1,2,3].map(k => k <= n ? 'var(--ns-bronze)' : 'rgba(245,244,225,0.16)'); };
-        const f = pip(meta.flavor), p = pip(meta.purity), sc = pip(meta.scale);
+        const pct = (lvl) => (({ Low: 33, Medium: 66, High: 88, Highest: 100 })[lvl] || 0) + '%';
         const isOpen = (st.extOpen || 0) === i;
         return Object.assign({}, x, { i: i, numDisp: String(i + 1).padStart(2, '0'),
           photo: (window.__resources && window.__resources[pf]) || pf, photoAlt: pa,
           separator: meta.sep, flavor: meta.flavor, purity: meta.purity, scale: meta.scale, tradeoff: meta.tradeoff,
-          f1: f[0], f2: f[1], f3: f[2], p1: p[0], p2: p[1], p3: p[2], s1: sc[0], s2: sc[1], s3: sc[2],
+          flavorW: pct(meta.flavor), purityW: pct(meta.purity), scaleW: pct(meta.scale),
           open: isOpen, rowBg: isOpen ? 'rgba(183,149,80,0.10)' : 'transparent',
           caret: isOpen ? '\u2212' : '+',
           caretBorder: isOpen ? 'var(--ns-bronze)' : 'rgba(183,149,80,0.45)',
@@ -4418,14 +4456,14 @@ class Component extends DCLogic {
       setCalcTsp: (e) => this.setCalc('tsp', e.target.value),
       setCalcServings: (e) => this.setCalc('servings', e.target.value),
       baseSteps: [
-        { num: '01', title: 'Decarb', body: 'Raw flower is full of THCA, not THC, so it will do almost nothing in food until it is heated. Break the flower into small, even pieces by hand, no need to grind it to powder. Spread it in a single loose layer on a parchment-lined tray and bake at 240F for about 40 minutes, giving the tray a gentle shake halfway through so it toasts evenly. It is ready when it turns a light golden brown and smells nutty and fragrant. This slow, low heat converts the THCA into active THC without burning off the good stuff. Skip this step and your edibles will not work, no matter how much flower you use.' },
-        { num: '02', title: 'Infused oil', body: 'Combine your decarbed flower with a carrier oil, coconut, MCT, or a mild olive oil all work well, using about one cup of oil per quarter ounce of flower. Warm the two together gently in a double boiler, a slow cooker on low, or a sealed mason jar set in a pot of water, holding the temperature between 160 and 200F for two to three hours. Never let it come to a simmer, since too much heat destroys both THC and the terpenes that carry flavor and effect. Stir now and then. When it is done, strain it through cheesecloth into a clean jar and squeeze the flower to get every last drop. Use it anywhere a recipe calls for oil.' },
-        { num: '03', title: 'Canna butter', body: 'Same gentle method, made with butter. Melt one cup of butter with one cup of water in a saucepan, the water buffers the heat and keeps the milk solids from scorching. Add your decarbed flower, then hold everything at a bare, lazy simmer for two to three hours, topping up the water if it runs low. Strain the mixture through cheesecloth into a heatproof bowl, then refrigerate until the butter sets into a firm layer on top of the water. Lift that layer off, scrape the water residue from the underside, and you have cannabutter. It is the workhorse of the kitchen, ready for baking, spreading, and savory dishes alike.' },
-        { num: '04', title: 'Cooking tincture', body: 'Place your decarbed flower in a clean glass jar and cover it completely with a high-proof, food-grade grain alcohol. Seal it tight and let it steep somewhere cool and dark for a few days to a couple of weeks, giving it a good shake once a day to pull the cannabinoids into the alcohol. When it is ready, strain it through a coffee filter into a dropper bottle to catch the fine plant matter. A few dropperfuls will dose and lightly flavor drinks, dressings, and any no-heat dish, and it is also the starting point for the cannasugar below. Store it sealed and out of the light.' },
-        { num: '05', title: 'Cannasugar', body: 'Start with the cooking tincture above. Stir it a little at a time into granulated sugar until the sugar is evenly moistened but not soupy, then spread it in a thin layer on a parchment-lined tray. Let it sit at room temperature so the alcohol fully evaporates, stirring and breaking up clumps every so often, until the sugar is completely dry and free-flowing again, this can take several hours or overnight. Once dry, it swaps in spoon for spoon anywhere you would use regular sugar: stirred into coffee or tea, folded into baking, or brushed around the rim of a glass for a dosed cocktail.' }
-      ].map((s, i) => { const id = 'base-' + i; const open = !!st.prodOpen[id]; return { num: s.num, title: s.title, body: s.body, open, caret: open ? '\u2212' : '+', onToggle: () => this.toggleProd(id) }; }),
+        { num: "01", title: "Decarb", lead: "Raw flower is full of THCA, not THC, so it will do almost nothing in food until it is heated.", steps: ["Break the flower into small, even pieces by hand. There is no need to grind it to powder.","Spread it in a single loose layer on a parchment-lined tray.","Bake at 240F for about 40 minutes, shaking the tray gently halfway through so it toasts evenly.","It is ready when it turns light golden brown and smells nutty and fragrant."], note: "Slow, low heat converts THCA into active THC without burning off the good stuff. Skip this step and your edibles will not work, no matter how much flower you use." },
+        { num: "02", title: "Infused oil", lead: "A neutral base that drops into anything calling for oil.", steps: ["Combine decarbed flower with a carrier oil, about one cup of oil per quarter ounce. Coconut, MCT, or a mild olive oil all work.","Warm the two together in a double boiler, a slow cooker on low, or a sealed mason jar set in a pot of water.","Hold between 160 and 200F for two to three hours, stirring now and then.","Strain through cheesecloth into a clean jar, squeezing the flower to get every last drop."], note: "Never let it simmer. Too much heat destroys both THC and the terpenes that carry flavor and effect." },
+        { num: "03", title: "Canna butter", lead: "The same gentle method, made with butter.", steps: ["Melt one cup of butter with one cup of water in a saucepan.","Add the decarbed flower and hold everything at a bare, lazy simmer for two to three hours, topping up the water if it runs low.","Strain through cheesecloth into a heatproof bowl.","Refrigerate until the butter sets into a firm layer, lift it off, and scrape the water residue from the underside."], note: "The water buffers the heat and keeps the milk solids from scorching. This is the workhorse of the kitchen: baking, spreading, and savory dishes alike." },
+        { num: "04", title: "Cooking tincture", lead: "An alcohol extraction that keeps well and doses precisely.", steps: ["Place decarbed flower in a clean glass jar and cover it completely with a high-proof, food-grade grain alcohol.","Seal it tight and let it steep somewhere cool and dark, shaking it once a day.","Strain through cheesecloth, then again through a coffee filter for a cleaner pour.","Store in a dark glass bottle away from light and heat."], note: "Because it is alcohol based, it stirs into cold and room-temperature foods where oil and butter will not go." },
+        { num: "05", title: "Cannasugar", lead: "A dry, free-flowing sugar that swaps in spoon for spoon.", steps: ["Start with the cooking tincture above.","Stir it a little at a time into granulated sugar until evenly moistened but not soupy.","Spread it in a thin layer on a parchment-lined tray.","Let it sit at room temperature until the alcohol fully evaporates, stirring and breaking up clumps, until completely dry. This can take several hours or overnight."], note: "Use it anywhere you would use regular sugar: stirred into coffee or tea, folded into baking, or brushed around the rim of a glass for a dosed cocktail." }
+      ].map((s, i) => { const id = 'base-' + i; const open = !!st.prodOpen[id]; return { num: s.num, title: s.title, lead: s.lead, steps: s.steps, note: s.note, open, caret: open ? '\u2212' : '+', onToggle: () => this.toggleProd(id) }; }),
       recipeCats: (() => {
-        const rs = (D.recipes || []).map((r, i) => { const id = 'rec-' + i; const open = !!st.prodOpen[id]; const copied = st.recipeCopied === id; return { name: r.name, kind: r.kind, dose: r.dose, ingredients: r.ingredients, steps: r.steps, cat: r.cat || 'Mains & Sides', open, caret: open ? '\u2212' : '+', onToggle: () => this.toggleProd(id), copyLabel: copied ? 'Copied \u2713' : 'Copy recipe \u2197', onCopy: (e) => { if (e && e.stopPropagation) e.stopPropagation(); this._copyRecipe(r, id); } }; });
+        const rs = (D.recipes || []).map((r, i) => { const id = 'rec-' + i; const open = !!st.prodOpen[id]; const copied = st.recipeCopied === id; const meta = [{ k: 'Type', v: r.kind }, { k: 'Infusion', v: r.dose }, { k: 'Steps', v: (r.steps || []).length + ' steps' }].filter(m => m.v); return { name: r.name, kind: r.kind, dose: r.dose, ingredients: r.ingredients, steps: r.steps, cat: r.cat || 'Mains & Sides', meta, note: r.note || '', hasNote: !!r.note, open, caret: open ? '\u2212' : '+', onToggle: () => this.toggleProd(id), copyLabel: copied ? 'Copied \u2713' : 'Copy recipe \u2197', onCopy: (e) => { if (e && e.stopPropagation) e.stopPropagation(); this._copyRecipe(r, id); } }; });
         const order = ['Beverages', 'Mains & Sides', 'Condiments & Spreads', 'Desserts'];
         const groups = [];
         order.forEach(cn => { const items = rs.filter(x => x.cat === cn); if (!items.length) return; const cid = 'rcat-' + cn; const copen = !!st.prodOpen[cid]; groups.push({ name: cn, label: items.length + (items.length === 1 ? ' recipe' : ' recipes'), open: copen, caret: copen ? '\u2212' : '+', onToggle: () => this.toggleProd(cid), recipes: items }); });
