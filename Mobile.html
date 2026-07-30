@@ -1394,6 +1394,7 @@ class Component extends DCLogic {
     // safety net: never leave content hidden if IO does not fire (background tab, non-painting capture, edge browsers)
     this._revealSafety=setTimeout(()=>{ document.querySelectorAll('[data-reveal]').forEach(e=>{ if(!e._rev){ e.style.opacity='1'; e.style.transform='none'; e._rev=1; } }); }, 1500);
     this._hydrateImgs(); requestAnimationFrame(()=>this._hydrateImgs());
+    let hy=0; this._hyT=setInterval(()=>{ this._hydrateImgs(); if(++hy>12) clearInterval(this._hyT); }, 400);
     // auto-apply Ken Burns to every content photo sitting in a clipping container
     document.querySelectorAll('img').forEach(im=>{
       const s=(im.getAttribute('data-src')||im.getAttribute('src')||'');
@@ -1430,7 +1431,7 @@ class Component extends DCLogic {
   }
   _startHero(){ if(this._heroGone) return; this._heroGone=1; try{ const r=document.documentElement; r.classList.add('nsm-hero-go'); setTimeout(()=>r.classList.remove('nsm-hero-go'),3200); }catch(e){} }
   dismissIntro(){ if(this._introT) clearTimeout(this._introT); try{ sessionStorage.setItem('nsm-intro','1'); }catch(e){} const el=document.getElementById('nsm-intro'); if(el){ el.style.animation='nsmIntroOut .6s ease forwards'; setTimeout(()=>{ this.setState({introOpen:false}); this._startHero(); },560); } else { this.setState({introOpen:false}); this._startHero(); } }
-  _hydrateImgs(){ const R=(typeof window!=='undefined'&&window.__resources)||null; document.querySelectorAll('img[data-src]').forEach(el=>{ const v=el.getAttribute('data-src'); if(!v||v.indexOf('{{')>=0) return; const t=(R&&R[v])||v; if(el.getAttribute('src')!==t){ el.setAttribute('src',t); if(el.complete && el.naturalWidth){ el.classList.add('nsm-loaded'); } else { el.addEventListener('load',()=>el.classList.add('nsm-loaded'),{once:true}); el.addEventListener('error',()=>el.classList.add('nsm-loaded'),{once:true}); } } }); }
+  _hydrateImgs(){ const R=(typeof window!=='undefined'&&window.__resources)||null; document.querySelectorAll('img[data-src]').forEach(el=>{ const v=el.getAttribute('data-src'); if(!v||v.indexOf('{{')>=0) return; const t=(R&&R[v])||v; if(el.getAttribute('src')!==t){ el.setAttribute('src',t); } if(el.complete&&el.naturalWidth){ el.classList.add('nsm-loaded'); } else if(!el._lw){ el._lw=1; el.addEventListener('load',()=>el.classList.add('nsm-loaded'),{once:true}); el.addEventListener('error',()=>el.classList.add('nsm-loaded'),{once:true}); } }); }
   _driveChap(){ const ids=this._chapIds||[]; if(!ids.length) return; const mark=window.innerHeight*0.34; let idx=0; for(let i=0;i<ids.length;i++){ const el=document.getElementById('chap-'+ids[i]); if(el && el.getBoundingClientRect().top<=mark) idx=i; } if(idx!==this.state.activeChap) this.setState({activeChap:idx}); }
   _driveEnt(){
     const steps=document.querySelectorAll('.nsm-ent-step'); if(!steps.length) return;
@@ -1750,12 +1751,12 @@ class Component extends DCLogic {
 
     // ---- Grow steps ----
     const growRaw=[
-      {name:'Clone',img:'assets/grow/clone-sm.jpg',copy:'Every plant starts as a cutting from a proven mother, so the genetics stay true from one harvest to the next. No seeds, no surprises.'},
-      {name:'Vegetative',img:'assets/grow/veg.jpg',copy:'Under long hours of light the plant builds its frame, stretching roots and leaves. This is where a healthy structure is set for everything that follows.'},
-      {name:'Flower',img:'assets/grow/flower-sm.jpg',copy:'A shift in the light cycle tells the plant to bloom. Over weeks the buds swell, trichomes frost over, and the terpenes that define each strain develop.'},
-      {name:'Harvest',img:'assets/grow/harvest-sm.jpg',copy:'Timing is everything. Plants come down at peak ripeness and are hand-cut, then hung whole to begin a slow, careful dry.'},
-      {name:'Cure',img:'assets/grow/cure.jpg',copy:'In sealed jars and controlled rooms the flower rests for weeks. The cure is what smooths the smoke and preserves aroma. Patience does the work here.'},
-      {name:'Finished',img:'assets/grow/finished.jpg',copy:'Hand-trimmed, tested, and packaged. What reaches the shelf carries a lab certificate and the name of the people who grew it.'}
+      {name:'Clone',img:'assets/grow/clone-sm.jpg',w:900,h:1200,copy:'Every plant starts as a cutting from a proven mother, so the genetics stay true from one harvest to the next. No seeds, no surprises.'},
+      {name:'Vegetative',img:'assets/grow/veg-sm.jpg',w:1000,h:1333,copy:'Under long hours of light the plant builds its frame, stretching roots and leaves. This is where a healthy structure is set for everything that follows.'},
+      {name:'Flower',img:'assets/grow/flower-sm.jpg',w:1300,h:867,copy:'A shift in the light cycle tells the plant to bloom. Over weeks the buds swell, trichomes frost over, and the terpenes that define each strain develop.'},
+      {name:'Harvest',img:'assets/grow/harvest-sm.jpg',w:1300,h:867,copy:'Timing is everything. Plants come down at peak ripeness and are hand-cut, then hung whole to begin a slow, careful dry.'},
+      {name:'Cure',img:'assets/grow/cure.jpg',w:1000,h:1250,copy:'In sealed jars and controlled rooms the flower rests for weeks. The cure is what smooths the smoke and preserves aroma. Patience does the work here.'},
+      {name:'Finished',img:'assets/grow/finished.jpg',w:1300,h:975,copy:'Hand-trimmed, tested, and packaged. What reaches the shelf carries a lab certificate and the name of the people who grew it.'}
     ];
     const growAnchor={Clone:'sec-grow-clone',Harvest:'sec-grow-harvest',Finished:'sec-grow-finished'};
     const growPos={Finished:'50% 20%',Cure:'50% 40%',Harvest:'50% 40%',Flower:'50% 45%',Clone:'50% 50%',Vegetative:'50% 45%'};
