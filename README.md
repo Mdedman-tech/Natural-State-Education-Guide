@@ -1,50 +1,89 @@
-# Natural State Medicinals — Education Guide (web build)
+# Repo update — July 30 2026
 
-Static site. No build step, no dependencies, no server code. GitHub Pages serves
-these files as-is.
+Matches your existing layout. Copy these over your repo root; they overwrite in place.
 
-## Deploying with GitHub Desktop
+**`index.html` and `desktop.html` are deliberately NOT in this package** — nothing here
+touches your landing page or the desktop build.
 
-1. Copy **everything inside this folder** into the root of your repo
-   (`Natural-State-Education-Guide`), replacing what is there.
-2. GitHub Desktop will list the changes. Commit, then Push.
-3. Pages redeploys in a minute or two.
+| File | Action |
+|---|---|
+| `mobile.html` | overwrite — current mobile guide |
+| `guide-data.js` | overwrite — **shared by both guides**, see below |
+| `fonts-local.css` | overwrite — points at `assets/fonts/` |
+| `support.js` | overwrite — runtime |
+| `assets/` | merge — includes `assets/fonts/` (four OTFs) and new brand marks |
 
-If your repo currently holds a single large `index.html` (the inlined
-standalone), delete it first — this replaces it.
+`_ds/` paths are left intact. Your `.nojekyll` already stops Pages from stripping
+underscore folders, so no rename is needed.
 
-## What each file is
+---
 
-| Path | Purpose |
-| --- | --- |
-| `index.html` | Router. Sends phones to `mobile.html`, everything else to `desktop.html`. |
-| `desktop.html` | The full guide. |
-| `mobile.html` | The mobile guide. |
-| `support.js` | Runtime both guides need. Do not edit. |
-| `guide-data.js` | All strain, product, terpene, recipe and glossary data. Shared by both guides. |
-| `fonts-local.css` | Font declarations. |
-| `assets/` | Photography and brand marks. |
-| `_ds/overbuilt-design-system-3b59…/` | Design tokens, the four licensed `.otf` fonts, and the component bundle. |
+## What changed
 
-**Keep the folder structure exactly as it is.** All references are relative, and
-`fonts-local.css` points into that long `_ds/…/fonts/` path. Renaming or
-flattening it silently drops the brand fonts back to fallbacks.
+### `guide-data.js` — brand-rule violation removed (affects desktop too)
 
-## Forcing a version
+This file is read by both guides, so overwriting it fixes desktop's data at the same time.
 
-- `index.html?v=desktop` — always the full guide
-- `index.html?v=mobile` — always the mobile guide
+- Removed the journal field `"Batch Number / COA Reference"`. It was on by default, so it
+  landed in every patient's copied and downloaded journal template.
+- Removed `recentCoaDate` and `coaCount` — 102 fields across 51 strains, all carrying dates.
+- Removed the `coas` array — 53 entries of batch IDs with test dates.
 
-The choice is remembered for that browser session. The cut-off is `MOBILE_MAX`
-(760px) near the top of `index.html`; change that one number to move it.
+Nothing rendered these, but they were one binding away from resurfacing, and the rule is
+absolute: no test dates or batch identifiers anywhere, since this is not a living document.
 
-Deep links survive the redirect, so `index.html#strain/dogtown` lands on the
-right strain in whichever version the visitor gets.
+Left alone on purpose: the glossary definitions of "Batch Number" and "Certificate of
+Analysis (COA)". Those are educational prose, which the rule allows — only dates and real
+identifiers are banned.
 
-## Editing content later
+Also corrected: Amnesia Fast now carries `24.4% – 30.5%` (previously had no THC fields).
 
-Copy and data changes live in `guide-data.js` and the two HTML files. Because
-these are small text files, future commits are a few KB rather than the ~29MB
-that the single inlined file cost every time.
+### `mobile.html`
 
-For Questions, Call Dedman. 
+- Amendment citation fixed. Amendment 89 is Arkansas's usury / interest-rate amendment and
+  has nothing to do with cannabis. Replaced with Amendment 98 copy under a retitled singular
+  "The amendment".
+- Carries everything from today's earlier passes (dark-mode hardening, footer edits, hero CTA,
+  duration-bar color, extraction bars, recipe index and sheet, journal certificate).
+
+---
+
+## Desktop still needs eight hand edits
+
+Overwriting `guide-data.js` fixes desktop's **data**, but not its markup. Desktop's HTML has
+diverged from mobile enough that find-and-replace does not match — of six changes I tried
+mechanically, only one anchor hit.
+
+Outstanding on `desktop.html`:
+
+1. **Dark-mode hardening** — no `color-scheme` meta at all; Android renders the cream
+   surfaces brown-olive. Needs the three metas, `forced-color-adjust: none`, and a
+   `@media (prefers-color-scheme: dark)` block re-asserting the five palette vars with
+   `!important`. The metas alone are not enough.
+2. **Footer** — permit line is an inline flex row (~line 2483), not mobile's paragraph.
+   Remove it; add `"DO NOT EAT" also, I guess.` after "…prevent any disease."
+3. **Amendment citation** — same factual error as mobile had.
+4. **Home-grow note** — drop "Strictly hypothetical."
+5. **Joint Journal** — remove the NSM / Permit 00088 line.
+6. **Hero CTA** — `Skip the theory, meet the flower`
+7. **Duration bar** — recolor to `linear-gradient(90deg, #cdb074, rgba(183,149,80,0.45))`
+8. **Laozi quote** — remove the flower logo above it.
+
+Exact replacement copy for each is in `desktop-changes.md`.
+
+> Faster option: open the desktop project in Claude and I can make all eight directly in the
+> file, the way they were made for mobile.
+
+---
+
+## Do not port to desktop
+
+Small-viewport solutions desktop does not need: recipe index + full-screen sheet, extraction
+mini-bars, wayfinder dot rail, per-step `object-position` crops, the A/A text-size control.
+
+---
+
+## Still open on both
+
+Chapters 09–12 carry no photography, so the last third reads drier than the first. Art
+direction, not code — needs photo picks.
