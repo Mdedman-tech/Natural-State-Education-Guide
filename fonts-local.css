@@ -1,5 +1,6 @@
-/* NSM fonts — self-hosted under assets/fonts/ so static hosts (incl. GitHub Pages,
-   which strips folders beginning with an underscore) always serve them. */
+/* Fonts live under assets/fonts/ — GitHub Pages strips folders beginning with an
+   underscore, so _ds/ never served and every face fell back. Do not move these back.
+   Trimmed NSM fonts: only the self-hosted faces that exist (avoids bundler fetch errors for un-uploaded cuts). */
 @import url('https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;1,400&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700&display=swap');
 

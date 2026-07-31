@@ -133,6 +133,10 @@
 <meta name="ext-resource-dependency" content="assets/extract/distillation.jpg" data-resource-id="assets/extract/distillation.jpg">
 <meta name="ext-resource-dependency" content="assets/kitchen/gems.jpg" data-resource-id="assets/kitchen/gems.jpg">
 <meta name="ext-resource-dependency" content="assets/brand/leaf-lattice-gold.png" data-resource-id="assets/brand/leaf-lattice-gold.png">
+<meta name="ext-resource-dependency" content="assets/brand/nav-mark-fanleaf.png" data-resource-id="assets/brand/nav-mark-fanleaf.png">
+<meta name="ext-resource-dependency" content="assets/brand/nav-mark-fanleaf-gold.png" data-resource-id="assets/brand/nav-mark-fanleaf-gold.png">
+<meta name="ext-resource-dependency" content="assets/brand/contents-lockup.png" data-resource-id="assets/brand/contents-lockup.png">
+<meta name="ext-resource-dependency" content="assets/brand/ns-monogram-gold.png" data-resource-id="assets/brand/ns-monogram-gold.png">
 <style>
   html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; forced-color-adjust: none; -webkit-forced-color-adjust: none; }
   /* Firefox/Chrome auto-dark re-tinted the whole palette brown-olive. Pin it. */
@@ -330,7 +334,7 @@
     <div id="nsm-progress" style="position:absolute;top:0;left:0;height:2px;width:0;background:var(--ns-bronze);"></div>
 
     <button onClick="{{ goHome }}" style="display:flex;align-items:center;gap:11px;background:none;border:none;cursor:pointer;padding:0;">
-      <img src="assets/brand/nav-mark-fanleaf.png" alt="" aria-hidden="true" style="flex:none;width:26px;height:26px;object-fit:contain;">
+      <span aria-hidden="true" style="flex:none;position:relative;display:block;width:26px;height:26px;"><img class="nsm-nav-leaf-w" src="assets/brand/nav-mark-fanleaf.png" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:1;transition:opacity .28s cubic-bezier(0.2,0.7,0.25,1);"><img class="nsm-nav-leaf-g" src="assets/brand/nav-mark-fanleaf-gold.png" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transition:opacity .28s cubic-bezier(0.2,0.7,0.25,1);"></span>
       <span class="nsm-brand-mark" style="display:none;font-family:var(--font-sans);font-size:calc(14px * var(--text-scale));font-weight:600;letter-spacing:0.14em;color:var(--ns-arctic);">NSM</span>
       <span data-navtext="" style="font-family:var(--font-sans);font-size:calc(11.5px * var(--text-scale));font-weight:600;letter-spacing:0.18em;color:var(--ns-arctic);">Natural State Medicinals</span>
     </button>
@@ -929,7 +933,7 @@
   </div>
   </div>
   <div id="sec-two-indicas" class="nsm-types-close" style="position:relative;overflow:hidden;background:radial-gradient(120% 90% at 50% 0%, var(--ns-haze) 0%, var(--ns-cream) 55%);padding:clamp(80px,14vh,160px) clamp(20px,6vw,80px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:72vh;">
-    <div aria-hidden="true" class="nsm-damask" style="position:absolute;inset:0;background-image:url('assets/brand/leaf-lattice-gold.png');background-repeat:repeat;background-size:clamp(240px,24vw,340px);opacity:0.30;pointer-events:none;"></div>
+    <div aria-hidden="true" class="nsm-damask" style="--damask-w:clamp(240px,24vw,340px);position:absolute;inset:0;background-image:url('assets/brand/leaf-lattice-gold.png');background-repeat:repeat;background-size:var(--damask-w) var(--damask-w);opacity:0.30;pointer-events:none;"></div>
     <div aria-hidden="true" style="position:absolute;inset:0;background:radial-gradient(62% 56% at 50% 46%, var(--ns-cream) 42%, rgba(246,231,215,0.72) 70%, transparent 100%);pointer-events:none;"></div>
     <span style="position:relative;font-family:var(--font-sans);font-size:calc(11px * var(--text-scale));font-weight:600;letter-spacing:0.24em;text-transform:uppercase;color:var(--ns-bronze);">The point of all this</span>
         <p class="nsm-quote" style="position:relative;margin:0;max-width:20ch;font-family:var(--font-display);font-weight:400;font-size:clamp(calc(28px * var(--text-scale)),4.8vw,calc(64px * var(--text-scale)));line-height:1.06;letter-spacing:-0.005em;color:var(--text-strong);text-wrap:balance;">Two indicas can feel completely different.</p>
@@ -1481,7 +1485,7 @@
       <div class="nsm-grow-stage" data-grow-stage="5" data-title="The hands behind it">
         <div data-reveal="" style="opacity:0;transform:translateY(22px);">
           <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin:0 0 16px;">
-            <span style="font-family:var(--font-sans);font-size:clamp(calc(28px * var(--text-scale)),3.4vw,calc(44px * var(--text-scale)));line-height:0.9;color:var(--ns-bronze);">07</span>
+            <span style="font-family:var(--font-sans);font-size:clamp(calc(28px * var(--text-scale)),3.4vw,calc(44px * var(--text-scale)));line-height:0.9;color:var(--ns-bronze);">06</span>
             <h3 style="margin:0;font-family:var(--font-sans);font-weight:400;font-size:clamp(calc(24px * var(--text-scale)),3vw,calc(38px * var(--text-scale)));line-height:1.05;color:var(--ns-arctic);">The hands behind it</h3>
             <span style="font-family:var(--font-sans);font-size:calc(11px * var(--text-scale));font-weight:600;letter-spacing:0.05em;color:var(--ns-bronze);border:1px solid var(--border-on-dark);border-radius:999px;padding:3px 11px;">every single day</span>
           </div>
@@ -1870,7 +1874,7 @@
           <button onClick="{{ toggleAmend }}" style="margin-top:16px;display:inline-flex;align-items:center;gap:7px;background:none;border:none;padding:0;cursor:pointer;font-family:var(--font-sans);font-size:calc(11px * var(--text-scale));font-weight:600;letter-spacing:0.12em;color:var(--ns-bronze);" style-hover="color:var(--ns-bronze-dark);">On the Arkansas amendments <span style="font-size:calc(15px * var(--text-scale));line-height:1;">{{ amendCaret }}</span></button>
           <sc-if value="{{ amendOpen }}" hint-placeholder-val="{{ false }}">
             <div style="margin-top:14px;border-top:1px solid var(--border-hairline);padding-top:14px;">
-              <p style="margin:0;font-size:calc(14px * var(--text-scale));line-height:1.66;color:var(--text-body);">Arkansas's Amendment 98 created the medical program, and Amendment 89 is the reference patients point to on person-to-person transfers. In short, sharing or handing off your medicine to another patient is not how the program is meant to work. When in doubt, confirm the current rules with your dispensary or the state program rather than a friend.</p>
+              <p style="margin:0;font-size:calc(14px * var(--text-scale));line-height:1.66;color:var(--text-body);">Arkansas's Amendment 98 created the medical program, and it is also where the transfer rule lives: section 3(e)(2) withdraws a patient's protection if they hand their medicine to someone who is not authorized to have it. In short, sharing or handing off your medicine to another patient is not how the program is meant to work. When in doubt, confirm the current rules with your dispensary or the state program rather than a friend.</p>
             </div>
           </sc-if>
           <br>
@@ -2338,7 +2342,7 @@
         <div style="position:relative;display:flex;align-items:flex-end;flex-wrap:wrap;gap:clamp(14px,3vw,36px);">
           <span style="font-family:var(--font-varsity);font-size:clamp(calc(40px * var(--text-scale)),7.5vw,calc(92px * var(--text-scale)));line-height:0.72;color:#C9A04A;">12</span>
           <div style="flex:1 1 200px;">
-            <span style="font-family:var(--font-banner);font-size:calc(14px * var(--text-scale));font-weight:400;letter-spacing:0.34em;color:#7E97C2;">CHAPTER ELEVEN</span>
+            <span style="font-family:var(--font-banner);font-size:calc(14px * var(--text-scale));font-weight:400;letter-spacing:0.34em;color:#7E97C2;">CHAPTER TWELVE</span>
             <h2 style="margin:4px 0 0;font-family:var(--font-varsity);font-weight:400;font-size:clamp(calc(32px * var(--text-scale)),6vw,calc(74px * var(--text-scale)));line-height:0.9;letter-spacing:0.01em;color:#F1EBD4;">State&nbsp;Line</h2>
           </div>
           <span style="align-self:flex-start;font-family:var(--font-banner);font-size:calc(13px * var(--text-scale));letter-spacing:0.26em;color:#0F0F10;background:#C9A04A;border-radius:3px;padding:7px 14px 5px;white-space:nowrap;">★ MADE FOR GOOD TIMES</span>
@@ -3280,6 +3284,8 @@ class Component extends DCLogic {
     }
     document.querySelectorAll('[data-navtext]').forEach(el => { el.style.color = top ? 'var(--ns-arctic)' : 'var(--text-strong)'; });
     document.querySelectorAll('.nsm-brand-mark').forEach(el => { el.style.color = top ? 'var(--ns-arctic)' : 'var(--text-strong)'; });
+    document.querySelectorAll('.nsm-nav-leaf-w').forEach(el => { el.style.opacity = top ? '1' : '0'; });
+    document.querySelectorAll('.nsm-nav-leaf-g').forEach(el => { el.style.opacity = top ? '0' : '1'; });
 
     const secs = [...document.querySelectorAll('[data-chapter]')];
     let active = secs.length ? secs[0].getAttribute('data-chapter') : 'welcome';
