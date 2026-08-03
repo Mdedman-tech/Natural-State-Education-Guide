@@ -193,7 +193,7 @@
           </sc-if>
         </sc-for>
       </div>
-      <p style="margin:26px 0 0;font-family:var(--font-sans);font-size:calc(11px * var(--text-scale));line-height:1.6;letter-spacing:0.02em;color:var(--text-on-dark-mut);text-align:center;">Permit No. {{ permit }} · Est. {{ est }} · {{ place }}</p>
+
     </div>
   </sc-if>
 
@@ -262,7 +262,7 @@
       <p class="nsm-hero-sub" style="margin:0;font-family:var(--font-sans);font-size:calc(15px * var(--text-scale));line-height:1.6;color:rgba(245,244,225,0.82);max-width:34ch;">A patient's guide to the plant, our flower, and how to use it well. Grown in Arkansas, for Arkansas.</p>
       <div class="nsm-hero-cta" style="display:flex;flex-direction:column;gap:12px;width:100%;max-width:340px;margin-top:4px;">
         <button onClick="{{ goFlower }}" style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:56px;background:var(--ns-bronze);color:var(--ns-midnight);border:none;border-radius:6px;cursor:pointer;font-family:var(--font-sans);font-size:calc(15px * var(--text-scale));font-weight:600;letter-spacing:0.04em;box-shadow:var(--shadow-bronze);">Skip the theory, meet the flower <span style="font-size:calc(17px * var(--text-scale));">→</span></button>
-        <button onClick="{{ openQuiz }}" style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:52px;background:transparent;color:var(--ns-arctic);border:1px solid rgba(183,149,80,0.55);border-radius:6px;cursor:pointer;font-family:var(--font-sans);font-size:calc(14px * var(--text-scale));font-weight:600;letter-spacing:0.04em;"><span style="display:grid;place-items:center;width:19px;height:19px;border:1px solid var(--ns-bronze);border-radius:50%;color:var(--ns-bronze);font-size:calc(12px * var(--text-scale));">?</span> Take the quiz, find your strain</button>
+        <button onClick="{{ openQuiz }}" style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:52px;background:rgba(32,37,58,0.55);backdrop-filter:blur(10px) saturate(1.05);-webkit-backdrop-filter:blur(10px) saturate(1.05);color:var(--ns-arctic);border:1px solid rgba(183,149,80,0.55);border-radius:6px;cursor:pointer;font-family:var(--font-sans);font-size:calc(14px * var(--text-scale));font-weight:600;letter-spacing:0.04em;"><span style="display:grid;place-items:center;width:19px;height:19px;border:1px solid var(--ns-bronze);border-radius:50%;color:var(--ns-bronze);font-size:calc(12px * var(--text-scale));">?</span> Take the quiz, find your strain</button>
       </div>
     </div>
     <div class="nsm-hero-scroll" style="position:absolute;bottom:18px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;opacity:0.7;">
@@ -1012,6 +1012,20 @@
                     <div>
                       <span style="font-family:var(--font-sans);font-size:calc(10px * var(--text-scale));font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:var(--ns-bronze);">{{ sec.label }}</span>
                       <p style="margin:7px 0 0;font-size:calc(14px * var(--text-scale));line-height:1.62;color:var(--text-body);">{{ sec.body }}</p>
+                      <sc-if value="{{ sec.hasBullets }}" hint-placeholder-val="{{ false }}">
+                        <ul style="margin:10px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:7px;">
+                          <sc-for list="{{ sec.bullets }}" as="bul" hint-placeholder-count="3">
+                            <li style="font-size:calc(13.5px * var(--text-scale));line-height:1.56;color:var(--text-body);">{{ bul.t }}</li>
+                          </sc-for>
+                        </ul>
+                      </sc-if>
+                      <sc-if value="{{ sec.hasLinks }}" hint-placeholder-val="{{ false }}">
+                        <div style="margin-top:11px;display:flex;flex-direction:column;gap:9px;">
+                          <sc-for list="{{ sec.links }}" as="lk" hint-placeholder-count="2">
+                            <a href="{{ lk.href }}" target="_blank" rel="noopener" style="display:inline-flex;align-items:baseline;gap:7px;font-family:var(--font-sans);font-size:calc(13px * var(--text-scale));font-weight:600;color:var(--ns-bronze);text-decoration:none;">{{ lk.label }} <span style="font-size:calc(11px * var(--text-scale));">&#8599;</span></a>
+                          </sc-for>
+                        </div>
+                      </sc-if>
                     </div>
                   </sc-for>
                 </div>
@@ -1394,6 +1408,7 @@ class Component extends DCLogic {
     // safety net: never leave content hidden if IO does not fire (background tab, non-painting capture, edge browsers)
     this._revealSafety=setTimeout(()=>{ document.querySelectorAll('[data-reveal]').forEach(e=>{ if(!e._rev){ e.style.opacity='1'; e.style.transform='none'; e._rev=1; } }); }, 1500);
     this._hydrateImgs(); requestAnimationFrame(()=>this._hydrateImgs());
+    let hy=0; this._hyT=setInterval(()=>{ this._hydrateImgs(); if(++hy>12) clearInterval(this._hyT); }, 400);
     // auto-apply Ken Burns to every content photo sitting in a clipping container
     document.querySelectorAll('img').forEach(im=>{
       const s=(im.getAttribute('data-src')||im.getAttribute('src')||'');
@@ -1430,7 +1445,7 @@ class Component extends DCLogic {
   }
   _startHero(){ if(this._heroGone) return; this._heroGone=1; try{ const r=document.documentElement; r.classList.add('nsm-hero-go'); setTimeout(()=>r.classList.remove('nsm-hero-go'),3200); }catch(e){} }
   dismissIntro(){ if(this._introT) clearTimeout(this._introT); try{ sessionStorage.setItem('nsm-intro','1'); }catch(e){} const el=document.getElementById('nsm-intro'); if(el){ el.style.animation='nsmIntroOut .6s ease forwards'; setTimeout(()=>{ this.setState({introOpen:false}); this._startHero(); },560); } else { this.setState({introOpen:false}); this._startHero(); } }
-  _hydrateImgs(){ const R=(typeof window!=='undefined'&&window.__resources)||null; document.querySelectorAll('img[data-src]').forEach(el=>{ const v=el.getAttribute('data-src'); if(!v||v.indexOf('{{')>=0) return; const t=(R&&R[v])||v; if(el.getAttribute('src')!==t){ el.setAttribute('src',t); if(el.complete && el.naturalWidth){ el.classList.add('nsm-loaded'); } else { el.addEventListener('load',()=>el.classList.add('nsm-loaded'),{once:true}); el.addEventListener('error',()=>el.classList.add('nsm-loaded'),{once:true}); } } }); }
+  _hydrateImgs(){ const R=(typeof window!=='undefined'&&window.__resources)||null; document.querySelectorAll('img[data-src]').forEach(el=>{ const v=el.getAttribute('data-src'); if(!v||v.indexOf('{{')>=0) return; const t=(R&&R[v])||v; if(el.getAttribute('src')!==t){ el.setAttribute('src',t); } if(el.complete&&el.naturalWidth){ el.classList.add('nsm-loaded'); } else if(!el._lw){ el._lw=1; el.addEventListener('load',()=>el.classList.add('nsm-loaded'),{once:true}); el.addEventListener('error',()=>el.classList.add('nsm-loaded'),{once:true}); } }); }
   _driveChap(){ const ids=this._chapIds||[]; if(!ids.length) return; const mark=window.innerHeight*0.34; let idx=0; for(let i=0;i<ids.length;i++){ const el=document.getElementById('chap-'+ids[i]); if(el && el.getBoundingClientRect().top<=mark) idx=i; } if(idx!==this.state.activeChap) this.setState({activeChap:idx}); }
   _driveEnt(){
     const steps=document.querySelectorAll('.nsm-ent-step'); if(!steps.length) return;
@@ -1710,9 +1725,27 @@ class Component extends DCLogic {
         {label:'Humidity control',body:'A two-way humidity pack (Boveda, Integra Boost, or similar) holds flower in the ideal 58 to 62 percent range. For concentrates and cartridges, a small desiccant pack and a cool, dark drawer do the trick.'},
         {label:'Short vs. long term',body:'For everyday use, a sealed jar in a cool cabinet is plenty. For longer storage, keep it sealed and cool but skip the freezer, frozen trichomes turn brittle and snap off when handled.'}
       ]},
-      {kicker:'Arkansas',title:'A responsible patient',body:'Medical cannabis in Arkansas lives within rules and paperwork. Keep a valid registration card and purchase through licensed dispensaries. Understanding the framework is part of using it well.',discLabel:'On the amendments & home grow',sections:[
-        {label:'The amendments',body:'Amendment 98 created the medical program, and Amendment 89 is the reference patients point to on person-to-person transfers. Sharing or handing off your medicine to another patient is not how the program is meant to work. When in doubt, confirm with your dispensary or the state program.'},
-        {label:'A note on home grow',body:'Arkansas law does not permit qualified patients to grow at home, so nothing here should be read as encouragement. We would only note, as a matter of general literary awareness, that books like The Cannabis Grow Bible (Greg Green), Marijuana Horticulture (Jorge Cervantes), and the Cannabis Grower\u2019s Handbook (Rosenthal & Downs) exist, are widely available, and are said to be very thorough. Know your state law.'}
+      {kicker:'Arkansas',title:'A responsible patient',body:'Medical cannabis is legal here because Arkansas voters wrote it into the state constitution. That gives patients real protection, and it comes with rules. Knowing them is part of using it well.',discLabel:'On the law, plainly',sections:[
+        {label:'What Amendment 98 is',body:'In November 2016, Arkansas voters passed Amendment 98. It is not a plain law that one legislature can undo on a bad afternoon. It sits in the state constitution. It says this: if you have a qualifying condition and a doctor signs off on it, you can register with the Arkansas Department of Health, get a card, and buy cannabis from a licensed dispensary. The card is good for a year. Then you renew it. Growers like us are licensed and inspected, and the plant is tracked from the room it grew in to the jar in your hand. That is the whole shape of it.'},
+        {label:'Who can qualify',body:'The amendment names the conditions, and a licensed health care provider has to put it in writing that you have one. Who counts as that provider has been argued over and changed more than once, so ask your clinic or check the state portal before you make an appointment.',bullets:[
+          'Cancer, glaucoma, HIV or AIDS, hepatitis C, ALS, Crohn\u2019s disease, ulcerative colitis',
+          'Tourette\u2019s syndrome, Alzheimer\u2019s disease, severe arthritis, fibromyalgia, PTSD',
+          'Wasting away (cachexia), nerve pain in the hands and feet, or bad nausea',
+          'Pain that will not let up, after six months of other treatment has not fixed it',
+          'Seizures, including epilepsy, and bad muscle spasms, including multiple sclerosis',
+          'Any other condition the Arkansas Department of Health adds to the list'
+        ]},
+        {label:'How much you may have',body:'Two and a half ounces in any fourteen days. That covers flower and the things made from it, and the dispensary keeps the count for you at the register. Keep what you buy in the package it came in, label and all.'},
+        {label:'What the constitution protects',body:'The amendment says a registered patient who follows the program should not be arrested, charged, or stripped of a right for using medical cannabis. That is a real protection, and it is worth knowing it is not a shield. Police still make stops and still make arrests, and your card is a defense you may have to raise, sometimes in front of a judge. The protection has edges, too. It does not cover using in public, at a school, in a jail, or on a bus. It does not cover driving or boating while you feel it. An employer can still keep its own rules. When something is unclear, ask your dispensary or the state program before you guess.'},
+        {label:'Read it yourself',body:'You do not have to take our word for any of this. Here is the amendment in its own words, and the state portal where you apply, renew, or check on your card. This page is a plain summary for patients, not legal advice.',links:[
+          {label:'Amendment 98, Section 3, patient protections',href:'https://law.justia.com/constitution/arkansas/amendments/amendment-98.html'},
+          {label:'Arkansas patient registry, apply or renew',href:'https://www.healthy.arkansas.gov/programs-services/topics/medical-marijuana'}
+        ]},
+        {label:'A note on home grow',body:'Arkansas law does not permit qualified patients to grow at home. Unfortunately, local and chain bookstores do not coordinate with the state about its laws, and they are still selling highly instructional, deeply detailed grow guides. The three most egregious are:',bullets:[
+          'The Cannabis Grow Bible, Greg Green. The widely cited beginner-to-hobbyist manual bridging botany and daily care. Covers lighting (including LEDs), soil vs. hydroponics, breeding, and extraction.',
+          'Marijuana Horticulture: The Indoor/Outdoor Medical Grower\u2019s Bible, Jorge Cervantes. A heavily illustrated 500-plus-page reference on plant anatomy, nutrients, pest management, and greenhouse setups.',
+          'Cannabis Grower\u2019s Handbook, Ed Rosenthal and David Downs. A modern, science-forward guide to cultivation, lighting, and harvest.'
+        ]}
       ]},
       {kicker:'Anxiety',title:'If it comes on too strong',body:'Too much THC at once can tip a good feeling into a racing, uneasy one. It passes, and it is not dangerous, but it is worth avoiding. The fix is almost always less: a smaller dose, more time between, and a strain that leans calm rather than racy.',discLabel:'If you feel it coming on',sections:[
         {label:'Settle it',body:'Find somewhere comfortable, slow your breathing, and drink some water. Remind yourself it will fade on its own, usually within an hour or two. Nothing is wrong.'},
@@ -1726,7 +1759,7 @@ class Component extends DCLogic {
       ]}
     ];
     const practiceCards=cardDefs.map((c,i)=>{ const e=exp('pc|'+i); return { kicker:c.kicker, title:c.title, body:c.body,
-      hasSections:!!c.discLabel, discLabel:c.discLabel||'', sections:c.sections||[],
+      hasSections:!!c.discLabel, discLabel:c.discLabel||'', sections:(c.sections||[]).map(s=>({label:s.label,body:s.body,hasBullets:!!(s.bullets&&s.bullets.length),bullets:(s.bullets||[]).map(t=>({t})),hasLinks:!!(s.links&&s.links.length),links:s.links||[]})),
       open:e.open, caret:e.caret, onToggle:e.onToggle }; });
 
     // ---- Concentrate consistency scale ----
@@ -1750,12 +1783,12 @@ class Component extends DCLogic {
 
     // ---- Grow steps ----
     const growRaw=[
-      {name:'Clone',img:'assets/grow/clone-sm.jpg',copy:'Every plant starts as a cutting from a proven mother, so the genetics stay true from one harvest to the next. No seeds, no surprises.'},
-      {name:'Vegetative',img:'assets/grow/veg.jpg',copy:'Under long hours of light the plant builds its frame, stretching roots and leaves. This is where a healthy structure is set for everything that follows.'},
-      {name:'Flower',img:'assets/grow/flower-sm.jpg',copy:'A shift in the light cycle tells the plant to bloom. Over weeks the buds swell, trichomes frost over, and the terpenes that define each strain develop.'},
-      {name:'Harvest',img:'assets/grow/harvest-sm.jpg',copy:'Timing is everything. Plants come down at peak ripeness and are hand-cut, then hung whole to begin a slow, careful dry.'},
-      {name:'Cure',img:'assets/grow/cure.jpg',copy:'In sealed jars and controlled rooms the flower rests for weeks. The cure is what smooths the smoke and preserves aroma. Patience does the work here.'},
-      {name:'Finished',img:'assets/grow/finished.jpg',copy:'Hand-trimmed, tested, and packaged. What reaches the shelf carries a lab certificate and the name of the people who grew it.'}
+      {name:'Clone',img:'assets/grow/clone-sm.jpg',w:900,h:1200,copy:'Every plant starts as a cutting from a proven mother, so the genetics stay true from one harvest to the next. No seeds, no surprises.'},
+      {name:'Vegetative',img:'assets/grow/veg-sm.jpg',w:1000,h:1333,copy:'Under long hours of light the plant builds its frame, stretching roots and leaves. This is where a healthy structure is set for everything that follows.'},
+      {name:'Flower',img:'assets/grow/flower-sm.jpg',w:1300,h:867,copy:'A shift in the light cycle tells the plant to bloom. Over weeks the buds swell, trichomes frost over, and the terpenes that define each strain develop.'},
+      {name:'Harvest',img:'assets/grow/harvest-sm.jpg',w:1300,h:867,copy:'Timing is everything. Plants come down at peak ripeness and are hand-cut, then hung whole to begin a slow, careful dry.'},
+      {name:'Cure',img:'assets/grow/cure.jpg',w:1000,h:1250,copy:'In sealed jars and controlled rooms the flower rests for weeks. The cure is what smooths the smoke and preserves aroma. Patience does the work here.'},
+      {name:'Finished',img:'assets/grow/finished.jpg',w:1300,h:975,copy:'Hand-trimmed, tested, and packaged. What reaches the shelf carries a lab certificate and the name of the people who grew it.'}
     ];
     const growAnchor={Clone:'sec-grow-clone',Harvest:'sec-grow-harvest',Finished:'sec-grow-finished'};
     const growPos={Finished:'50% 20%',Cure:'50% 40%',Harvest:'50% 40%',Flower:'50% 45%',Clone:'50% 50%',Vegetative:'50% 45%'};
